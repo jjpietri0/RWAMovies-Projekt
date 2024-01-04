@@ -15,14 +15,14 @@ namespace IntegrationModule.Controllers
             _context = context;
         }
 
-        // GET: api/VideoContent
+        // GET
         [HttpGet]
         public ActionResult<IEnumerable<Tag>> GetTagAll()
         {
             return _context.Tag.ToList();
         }
 
-        // GET: api/VideoContent/5
+        // GET:
         [HttpGet("{id}")]
         public ActionResult<Tag> GetTagById(int id)
         {
@@ -36,7 +36,7 @@ namespace IntegrationModule.Controllers
             return tag;
         }
 
-        // POST: api/Tag
+        // POST
         [HttpPost]
         public ActionResult<Tag> PostTag(Tag tag)
         {
@@ -46,7 +46,7 @@ namespace IntegrationModule.Controllers
             return CreatedAtAction(nameof(GetTagById), new { id = tag.Id }, tag);
         }
 
-        // PUT: api/Tag/1
+        // PUT:
         [HttpPut("{id}")]
         public IActionResult PutTag(int id, Tag tag)
         {
@@ -61,7 +61,7 @@ namespace IntegrationModule.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Tag/1
+        // DELETE:
         [HttpDelete("{id}")]
         public IActionResult DeleteTag(int id)
         {

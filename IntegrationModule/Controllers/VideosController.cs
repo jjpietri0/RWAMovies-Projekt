@@ -17,7 +17,7 @@ namespace IntegrationModule.Controllers
         }
 
         //GET(all)
-        //[Authorize]
+        [Authorize]
         [HttpGet("[action]")]
         public ActionResult<IEnumerable<VideoResponse>> GetAll([FromQuery] string name, [FromQuery] string genre, [FromQuery] string orderBy, [FromQuery] int? page, [FromQuery] int? pageSize)
         {
@@ -84,7 +84,7 @@ namespace IntegrationModule.Controllers
         }
 
         //GET(id)
-        //[Authorize]
+        [Authorize]
         [HttpGet("[action]/{id}")]
         public ActionResult<VideoResponse> GetId(int id)
         {
@@ -119,7 +119,7 @@ namespace IntegrationModule.Controllers
         }
 
         //POST
-        //[Authorize]
+        [Authorize]
         [HttpPost("[action]")]
         public ActionResult<VideoResponse> Create([FromBody] VideoCreate videoCreate)
         {
@@ -182,7 +182,7 @@ namespace IntegrationModule.Controllers
         }
 
         //PUT
-        //[Authorize]
+        [Authorize]
         [HttpPut("[action]/{id}")]
         public ActionResult<VideoResponse> Update(int id, [FromBody] VideoCreate videoRequest)
         {
@@ -220,7 +220,7 @@ namespace IntegrationModule.Controllers
         }
 
         //DELETE
-        //[Authorize]
+        [Authorize]
         [HttpDelete("[action]/{id}")]
         public ActionResult Delete(int id)
         {
@@ -232,14 +232,12 @@ namespace IntegrationModule.Controllers
                     return NotFound();
                 }
 
-                // Remove image entity from the database where the image is not used by any other video
                 var image = _context.Image.Find(video.ImageId);
                 if (image != null && _context.Video.Count(v => v.ImageId == image.Id) == 1)
                 {
                     _context.Image.Remove(image);
                 }
 
-                // Remove all VideoTags from database where the video exists
                 var videoTags = _context.VideoTag.Where(vt => vt.VideoId == video.Id);
                 if (videoTags.Any())
                 {

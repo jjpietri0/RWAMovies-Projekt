@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,8 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 //KeyVaultSecret secret = await client.GetSecretAsync("RWASecret");
 //builder.Configuration["Jwt:Key"] = secret.Value;
 
-
-
 //TREBA IZ CACHEA UZET SECRET I POSTAVIT U CONFIGURATION
 
 builder.Services.AddDbContext<ProjectDBContext>(options =>
@@ -23,11 +23,28 @@ builder.Services.AddDbContext<ProjectDBContext>(options =>
 });
 
 
+var tokenHandler = new JwtSecurityTokenHandler();
+var key = Encoding.ASCII.GetBytes("edbXe3uNTBm0zjxf/OvnVKbVq1KmKmnVvqxWK6JfeKU=");
+var tokenDescriptor = new SecurityTokenDescriptor
+{
+    Subject = new ClaimsIdentity(new Claim[]
+    {
+        new Claim(ClaimTypes.Name, "Pero")
+    }),
+    Expires = DateTime.UtcNow.AddDays(7),
+    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+    Issuer = "localhost",
+    Audience = "localhost"
+};
+var token = tokenHandler.CreateToken(tokenDescriptor);
+var tokenString = tokenHandler.WriteToken(token);
+
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "IntegrationModule", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "IntegrationModule", Version = "1" });
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {

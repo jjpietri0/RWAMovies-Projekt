@@ -65,7 +65,7 @@ public partial class ProjectDBContext :
             entity.ToTable("Notification");
 
             entity.Property(e => e.Body).HasMaxLength(1024);
-            entity.Property(e => e.RecieverEmail).HasMaxLength(256);
+            entity.Property(e => e.ReceiverEmail).HasMaxLength(256);
             entity.Property(e => e.Subject).HasMaxLength(256);
         });
 
