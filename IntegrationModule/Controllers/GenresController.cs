@@ -1,7 +1,6 @@
 ﻿using IntegrationModule.Models;
 using IntegrationModule.ResponseModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace IntegrationModule.Controllers
 {
@@ -43,7 +42,7 @@ namespace IntegrationModule.Controllers
         {
             try
             {
-                var dbGenre = _context .Genre.Find(id);
+                var dbGenre = _context.Genre.Find(id);
                 if (dbGenre == null)
                 {
                     return NotFound();

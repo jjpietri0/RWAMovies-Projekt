@@ -5,6 +5,7 @@ namespace IntegrationModule.Models;
 public partial class ProjectDBContext :
     DbContext
 {
+
     public ProjectDBContext()
     {
     }
@@ -31,9 +32,9 @@ public partial class ProjectDBContext :
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("Name=ConnectionStrings:DefaultConnection");
+        optionsBuilder.UseSqlServer("Server=tcp:jjpietri-server.database.windows.net,1433;Initial Catalog=RWAMovies;Persist Security Info=False;User ID=sis;Password=futurajjP123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
     }
-            
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Country>(entity =>
@@ -132,6 +133,6 @@ public partial class ProjectDBContext :
         OnModelCreatingPartial(modelBuilder);
     }
 
-    
+
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

@@ -5,6 +5,8 @@ VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationModule", "IntegrationModule\IntegrationModule.csproj", "{1C0822DD-275C-49F9-BC71-0C5F3212852E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminModule", "AdminModule\AdminModule.csproj", "{8301B5A4-E898-4141-9424-4FA35F047EB0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{1C0822DD-275C-49F9-BC71-0C5F3212852E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C0822DD-275C-49F9-BC71-0C5F3212852E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C0822DD-275C-49F9-BC71-0C5F3212852E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8301B5A4-E898-4141-9424-4FA35F047EB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8301B5A4-E898-4141-9424-4FA35F047EB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8301B5A4-E898-4141-9424-4FA35F047EB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8301B5A4-E898-4141-9424-4FA35F047EB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

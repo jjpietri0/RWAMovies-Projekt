@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace IntegrationModule.REQModels
+﻿namespace IntegrationModule.REQModels
 {
     public class UserReq
     {

@@ -1,7 +1,7 @@
 ﻿using IntegrationModule.Models;
 using IntegrationModule.REQModels;
 
-namespace IntegrationModule.Services
+namespace IntegrationModule.JWTServices
 {
     public interface IUserGenRepository
     {

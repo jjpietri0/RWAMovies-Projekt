@@ -1,3 +1,5 @@
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using IntegrationModule.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -9,42 +11,43 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.Services.AddMemoryCache();
+var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri")!);
+//builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
 
-//var client = new SecretClient(new Uri("https://rwamovieskey.vault.azure.net/"), new DefaultAzureCredential());
-//KeyVaultSecret secret = await client.GetSecretAsync("RWASecret");
-//builder.Configuration["Jwt:Key"] = secret.Value;
+//var client = new SecretClient(keyVaultEndpoint, new DefaultAzureCredential());
+//var secretConnstring = (await client.GetSecretAsync("RWAConnectionString")).Value.Value;
+//builder.Configuration["ConnectionStrings:AzureConnection"] = secretConnstring;
 
-//TREBA IZ CACHEA UZET SECRET I POSTAVIT U CONFIGURATION
 
 builder.Services.AddDbContext<ProjectDBContext>(options =>
 {
+    //options.UseSqlServer(builder.Configuration.GetConnectionString("AzureConnection"));
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 
-var tokenHandler = new JwtSecurityTokenHandler();
-var key = Encoding.ASCII.GetBytes("edbXe3uNTBm0zjxf/OvnVKbVq1KmKmnVvqxWK6JfeKU=");
-var tokenDescriptor = new SecurityTokenDescriptor
-{
-    Subject = new ClaimsIdentity(new Claim[]
-    {
-        new Claim(ClaimTypes.Name, "Pero")
-    }),
-    Expires = DateTime.UtcNow.AddDays(7),
-    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-    Issuer = "localhost",
-    Audience = "localhost"
-};
-var token = tokenHandler.CreateToken(tokenDescriptor);
-var tokenString = tokenHandler.WriteToken(token);
+//var tokenHandler = new JwtSecurityTokenHandler();
+//var key = Encoding.ASCII.GetBytes("edbXe3uNTBm0zjxf/OvnVKbVq1KmKmnVvqxWK6JfeKU=");
+//var tokenDescriptor = new SecurityTokenDescriptor
+//{
+//    Subject = new ClaimsIdentity(new Claim[]
+//    {
+//        new(ClaimTypes.Name, "Pero")
+//    }),
+//    Expires = DateTime.UtcNow.AddDays(7),
+//    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+//    Issuer = "localhost",
+//    Audience = "localhost"
+//};
+//var token = tokenHandler.CreateToken(tokenDescriptor);
+//var tokenString = tokenHandler.WriteToken(token);
 
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "IntegrationModule", Version = "1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "IntegrationModule"});
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -70,7 +73,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowOrigin",
-               builder => builder.WithOrigins("https://localhost:7035")
+               builder => builder.WithOrigins("https://localhost:7035", "http://localhost:5280")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials());
@@ -96,7 +99,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 var app = builder.Build();
 
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

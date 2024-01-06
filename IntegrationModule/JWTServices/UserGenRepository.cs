@@ -7,7 +7,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace IntegrationModule.Services
+namespace IntegrationModule.JWTServices
 {
     public class UserGenRepository : IUserGenRepository
     {
@@ -54,17 +54,17 @@ namespace IntegrationModule.Services
 
         public Tokens JwtTokens(JwtTokensReq request)
         {
-            var jwtKey = Encoding.UTF8.GetBytes(_configuration["JWT:Key"]!);
+            var jwtKey = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, request.Username),
-                    new Claim(JwtRegisteredClaimNames.Sub, request.Username)
+                    new(ClaimTypes.Name, request.Username),
+                    new(JwtRegisteredClaimNames.Sub, request.Username)
                 }),
-                Issuer = _configuration["JWT:Issuer"],
-                Audience = _configuration["JWT:Audience"],
+                Issuer = _configuration["Jwt:Issuer"],
+                Audience = _configuration["Jwt:Audience"],
                 Expires = DateTime.UtcNow.AddDays(120),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(jwtKey),

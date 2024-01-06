@@ -1,5 +1,5 @@
 ﻿namespace IntegrationModule.ResponseModels
-{   
+{
     public partial class CountryResponse
     {
         public string Code { get; set; } = null!;

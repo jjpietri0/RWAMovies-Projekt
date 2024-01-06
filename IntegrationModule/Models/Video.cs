@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace IntegrationModule.Models
+﻿namespace IntegrationModule.Models
 {
     public partial class Video
     {
