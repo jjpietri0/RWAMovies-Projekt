@@ -1,11 +1,11 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
-    fetch("/api/Notifications/GetUnsentNotificationsCount")
+    fetch("/api/Notification/GetUnsentNotificationsCount")
         .then(response => response.json())
         .then(count => {
             document.querySelector("#unsentNotifNumber").textContent = count;
         });
 
-    fetch("/api/Notifications/GetAll")
+    fetch("/api/Notification/GetAll")
         .then(response => response.json())
         .then(notifications => {
             const notificationsList = document.querySelector("#notificationList");
@@ -22,13 +22,13 @@
 
     const sendNotificationsBtn = document.querySelector("#sendBtn");
     sendNotificationsBtn.addEventListener("click", function () {
-        fetch("/api/Notifications/SendAllNotifications", {
+        fetch("/api/Notification/SendAllNotifications", {
             method: "POST"
         })
             .then(response => {
                 if (response.ok) {
                     alert("Notifications sent successfully");
-                    fetch("/api/Notifications/GetUnsentNotificationsCount")
+                    fetch("/api/Notification/GetUnsentNotificationsCount")
                         .then(response => response.json())
                         .then(count => {
                             document.querySelector("#unsentNotifNumber").textContent = count;

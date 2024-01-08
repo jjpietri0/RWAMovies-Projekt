@@ -1,0 +1,95 @@
+﻿@model IntegrationModule.REQModels.VideoReq
+
+@{
+    ViewData["Title"] = "Create Video";
+}
+
+<h1>Create Video</h1>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label for="Name">Name:</label>
+        <input type="text" class="form-control" id="Name" name="Name" required />
+    </div>
+    <div class="form-group">
+        <label for="Description">Description:</label>
+        <input type="text" class="form-control" id="Description" name="Description" />
+    </div>
+    <div class="form-group">
+        <label for="GenreId">Genre:</label>
+        <select id="GenreId" name="GenreId" class="form-control"></select>
+    </div>
+    <div class="form-group">
+        <label for="TotalSeconds">Total Time (seconds):</label>
+        <input type="number" class="form-control" id="TotalSeconds" name="TotalSeconds" required />
+    </div>
+    <div class="form-group">
+        <label for="StreamingUrl">Streaming URL:</label>
+        <input type="url" class="form-control" id="StreamingUrl" name="StreamingUrl" required />
+    </div>
+    <div class="form-group">
+        <label for="ImageUrl">New Image URL:</label>
+        <input type="url" class="form-control" id="ImageUrl" name="ImageUrl" />
+    </div>
+    <div class="form-group">
+        <label for="ImageId">Or Select an Existing Image:</label>
+        <select id="ImageId" name="ImageId" class="form-control">
+            <option value="">Select Image</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Fetch genres for dropdown
+            $.ajax({
+                url: "https://localhost:7035/api/Genres/GetAll",
+                type: "GET",
+                success: function (data) {
+                    var dropdown = $("#GenreId");
+                    dropdown.empty();
+                    dropdown.append($("<option />").val("").text("Select Genre"));
+                    $.each(data, function () {
+                        dropdown.append($("<option />").val(this.id).text(this.name));
+                    });
+                }
+            });
+
+            // Fetch images for dropdown
+            $.ajax({
+                url: "https://localhost:7035/api/Images",
+                type: "GET",
+                success: function (data) {
+                    var dropdown = $("#ImageId");
+                    dropdown.empty();
+                    dropdown.append($("<option />").val("").text("Select Image"));
+                    $.each(data, function () {
+                        dropdown.append($("<option />").val(this.id).text(this.content));
+                    });
+                }
+            });
+        });
+
+        // Check that only one of ImageId or ImageUrl is provided
+        $("form").on("submit", function (e) {
+            var imageUrl = $("#ImageUrl").val();
+            var imageId = $("#ImageId").val();
+
+            if (imageUrl && imageId) {
+                alert("Please provide either a new image URL or select an existing image, not both.");
+                e.preventDefault();  // prevent form from submitting
+            }
+            else if (!imageUrl && !imageId) {
+                alert("Please provide either a new image URL or select an existing image.");
+                e.preventDefault();  // prevent form from submitting
+            }
+        });
+    </script>
+}

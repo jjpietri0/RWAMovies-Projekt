@@ -12,56 +12,49 @@ namespace AdminModule.Dal
         private readonly HttpClient _httpClient;
         private readonly string _baseUrl;
 
-
-        public TagService(HttpClient httpClient, IOptions<Api> options)
+        public TagService(HttpClient httpClient, IOptions<Api> apiConfig)
         {
             _httpClient = httpClient;
-            _baseUrl = options.Value.BaseUrl;
+            _baseUrl = apiConfig.Value.BaseUrl;
         }
 
         public async Task<IEnumerable<TagResponse>> GetAllTagsAsync()
         {
+
             try
             {
                 var response = await _httpClient.GetAsync($"{_baseUrl}/Tags/GetAllTags");
-                response.EnsureSuccessStatusCode();
                 var content = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<IEnumerable<TagResponse>>(content);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
-            
         }
 
-        public async Task<TagResponse> GetTagAsync(int id)
+        public async Task<TagResponse> GetTagByIdAsync(int id)
         {
-            var response = await _httpClient.GetAsync($"{_baseUrl}/Tags/GetTagById/{id}");
-            response.EnsureSuccessStatusCode();
+            var response = await _httpClient.GetAsync($"{_baseUrl}/Tags/GetById/{id}");
             var content = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<TagResponse>(content);
         }
 
-
-        public async Task<TagResponse> CreateTagAsync(TagRequest tag)
+        public async Task CreateTagAsync(TagReq tag)
         {
-            var response = await _httpClient.PostAsync($"{_baseUrl}/Tags/Create",
-                               new StringContent(JsonConvert.SerializeObject(tag), Encoding.UTF8, "application/json"));
-            response.EnsureSuccessStatusCode();
-            var content = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<TagResponse>(content);
+            var content = new StringContent(JsonConvert.SerializeObject(tag), Encoding.UTF8, "application/json");
+            await _httpClient.PostAsync($"{_baseUrl}/Tags/CreateTag", content);
         }
 
-        public async Task UpdateTagAsync(int id, TagRequest tag)
+        public async Task UpdateTagAsync(int id, TagReq tag)
         {
-            await _httpClient.PutAsync($"{_baseUrl}/Tags/Update/{id}", new StringContent(JsonConvert.SerializeObject(tag), Encoding.UTF8, "application/json"));
+            var content = new StringContent(JsonConvert.SerializeObject(tag), Encoding.UTF8, "application/json");
+            await _httpClient.PutAsync($"{_baseUrl}/Tags/UpdateTag/{id}", content);
         }
 
         public async Task DeleteTagAsync(int id)
         {
-            var response = await _httpClient.DeleteAsync($"{_baseUrl}/Tags/DeleteTag/{id}");
-            response.EnsureSuccessStatusCode();
+            await _httpClient.DeleteAsync($"{_baseUrl}/Tags/DeleteTag/{id}");
         }
     }
 }

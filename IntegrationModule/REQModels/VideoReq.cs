@@ -2,7 +2,7 @@
 
 namespace IntegrationModule.REQModels
 {
-    public class VideoRequest
+    public class VideoReq
     {
         public string Name { get; set; }
         public string Description { get; set; }

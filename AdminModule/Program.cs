@@ -1,28 +1,31 @@
 using AdminModule.Dal;
 using AdminModule.Properties;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
 builder.Services.AddControllersWithViews();
+// Refresh razor pages on change
 builder.Services.AddRazorPages();
 
 
-builder.Services.AddDbContext<IntegrationModule.Models.ProjectDBContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
-
-//builder.Services.AddHttpClient<CountryService>();
-builder.Services.AddHttpClient<VideoService>();
-builder.Services.AddHttpClient<TagService>();
-//builder.Services.AddHttpClient<GenreService>();
-//builder.Services.AddHttpClient<UserService>();
+// Add configuration for the API and Admin
 builder.Services.Configure<Api>(builder.Configuration.GetSection("Api"));
+builder.Services.Configure<Admin>(builder.Configuration.GetSection("AdminCreds"));
+
+// Add Services for the API
+builder.Services.AddHttpClient<VideoService>();
+builder.Services.AddHttpClient<CountryService>();
+builder.Services.AddHttpClient<TagService>();
+builder.Services.AddHttpClient<GenreService>();
+builder.Services.AddHttpClient<UserService>();
 
 builder.Services.AddTransient<VideoService>();
 builder.Services.AddTransient<TagService>();
 
+
 var app = builder.Build();
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -30,7 +33,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 app.UseStaticFiles();
-app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthorization();

@@ -1,5 +1,6 @@
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+using IntegrationModule.JWTServices;
 using IntegrationModule.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,9 @@ builder.Services.AddDbContext<ProjectDBContext>(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSingleton<IUserGenRepository, UserGenRepository>();
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "IntegrationModule"});
@@ -70,6 +74,8 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowOrigin",
@@ -84,12 +90,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = true,
             ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidateIssuer = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
             //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret.Value))
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
@@ -98,18 +104,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+app.UseSwaggerUI(c =>
+{
+    var swaggerSettings = builder.Configuration.GetSection("Swagger");
+
+    c.SwaggerEndpoint(swaggerSettings["Endpoint"], swaggerSettings["Title"]); 
+    c.RoutePrefix = swaggerSettings["RoutePrefix"];
+});
+
 app.UseCors("AllowOrigin");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseStaticFiles();
 
 app.MapControllers();
 

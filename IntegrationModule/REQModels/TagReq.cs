@@ -2,7 +2,7 @@
 
 namespace IntegrationModule.REQModels
 {
-    public class TagRequest
+    public class TagReq
     {
         public string Name { get; set; }
 

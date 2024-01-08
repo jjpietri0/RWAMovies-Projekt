@@ -4,52 +4,51 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AdminModule.Controllers
 {
-    public class TagsController : Controller
+    public class TagAdminController : Controller
     {
-        private readonly TagService tagService;
+        private readonly TagService _tagService;
 
-        public TagsController(TagService tagService)
+        public TagAdminController(TagService tagService)
         {
-            this.tagService = tagService;
+            _tagService = tagService;
         }
 
-        // GET: Tags
         public async Task<IActionResult> Index()
         {
             try
             {
-                return View(await tagService.GetAllTagsAsync());
+                return View(await _tagService.GetAllTagsAsync());
             }
-            catch (Exception ex)
+            catch (HttpRequestException)
             {
-                return RedirectToAction("Error", "Home", new { message = ex.Message });
+                return RedirectToAction("Error", "Home");
             }
         }
 
-        //Create
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(TagRequest tagReq)
+        public async Task<IActionResult> Create(TagReq tag)
         {
             try
             {
-                await tagService.CreateTagAsync(tagReq);
-                return RedirectToAction(nameof(Index));
+                await _tagService.CreateTagAsync(tag);
+                return RedirectToAction("Index");
             }
-            catch (Exception ex)
+            catch (HttpRequestException)
             {
-                return RedirectToAction("Error", "Home", new { message = ex.Message });
+                return RedirectToAction("Error", "Home");
             }
         }
+
         public async Task<IActionResult> Edit(int id)
         {
             try
             {
-                var tag = await tagService.GetTagAsync(id);
+                var tag = await _tagService.GetTagByIdAsync(id);
                 return View(tag);
             }
             catch (HttpRequestException)
@@ -59,12 +58,12 @@ namespace AdminModule.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, TagRequest tagReq)
+        public async Task<IActionResult> Edit(int id, TagReq tag)
         {
             try
             {
-                await tagService.UpdateTagAsync(id, tagReq);
-                return RedirectToAction(nameof(Index));
+                await _tagService.UpdateTagAsync(id, tag);
+                return RedirectToAction("Index");
             }
             catch (HttpRequestException)
             {
@@ -76,9 +75,8 @@ namespace AdminModule.Controllers
         {
             try
             {
-                await tagService.DeleteTagAsync(id);
-                return RedirectToAction(nameof(Index));
-
+                await _tagService.DeleteTagAsync(id);
+                return RedirectToAction("Index");
             }
             catch (HttpRequestException)
             {

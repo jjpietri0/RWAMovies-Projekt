@@ -1,12 +1,9 @@
-﻿using AdminModule.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace AdminModule.Controllers
 {
     public class HomeController : Controller
     {
- 
         public IActionResult Index()
         {
             return View();
@@ -14,7 +11,7 @@ namespace AdminModule.Controllers
 
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View();
         }
     }
 }

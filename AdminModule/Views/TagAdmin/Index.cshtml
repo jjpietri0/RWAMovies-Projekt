@@ -1,0 +1,54 @@
+﻿@model IEnumerable<IntegrationModule.ResponseModels.TagResponse>
+
+@{
+    ViewData["Title"] = "Tag Management";
+}
+
+<h1>Tag Management</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add New Tag</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var tag in Model)
+            {
+                <tr>
+                    <td>@tag.Id</td>
+                    <td>@tag.Name</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@tag.Id" class="btn btn-secondary">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@tag.Id" class="btn btn-danger delete">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3">No tags found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Event handler for delete button
+            $(".delete").click(function () {
+                return confirm("Are you sure you want to delete this tag?");
+            });
+        });
+    </script>
+}

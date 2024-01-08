@@ -1,0 +1,106 @@
+﻿@model IntegrationModule.ResponseModels.VideoResponse
+
+@{
+    ViewData["Title"] = "Edit Video";
+}
+
+<h1>Edit Video</h1>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="GenreId">Genre</label>
+        <select id="genresDropdown" asp-for="GenreId" class="form-control">
+            <!-- Genres will be populated using AJAX -->
+        </select>
+        <span asp-validation-for="GenreId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TotalSeconds"></label>
+        <input asp-for="TotalSeconds" class="form-control" />
+        <span asp-validation-for="TotalSeconds" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="StreamingUrl"></label>
+        <input asp-for="StreamingUrl" class="form-control" />
+        <span asp-validation-for="StreamingUrl" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ImageId">Image</label>
+        <select id="imagesDropdown" asp-for="ImageId" class="form-control">
+            <!-- Images will be populated using AJAX -->
+        </select>
+        <div id="imageContainer">
+            <!-- Image URL will be displayed when an image is selected -->
+        </div>
+        <span asp-validation-for="ImageId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Fetch genres for dropdown
+            $.ajax({
+                url: "https://localhost:7035/api/Genres/GetAll",
+                type: "GET",
+                success: function (data) {
+                    var dropdown = $("#genresDropdown");
+                    dropdown.empty();
+                    dropdown.append($("<option />").val("").text("Select Genre"));
+                    $.each(data, function () {
+                        dropdown.append($("<option />").val(this.id).text(this.name));
+                    });
+                    dropdown.val("@Model.GenreId"); // Set the selected value
+                }
+            });
+
+            // Fetch images for dropdown
+            $.ajax({
+                url: "https://localhost:7035/api/Images",
+                type: "GET",
+                success: function (data) {
+                    var dropdown = $("#imagesDropdown");
+                    dropdown.empty();
+                    dropdown.append($("<option />").val("").text("Select Image"));
+                    $.each(data, function () {
+                        dropdown.append($("<option />").val(this.id).text(this.content));
+                    });
+                    dropdown.val("@Model.ImageId"); // Set the selected value
+                }
+            });
+
+            // Display image URL when an image is selected
+            $("#imagesDropdown").change(function () {
+                var selectedImageUrl = $(this).find("option:selected").text();
+                if (selectedImageUrl) {
+                    $("#imageContainer").text(selectedImageUrl);
+                } else {
+                    $("#imageContainer").empty();
+                }
+            });
+        });
+    </script>
+}
+

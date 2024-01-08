@@ -13,12 +13,12 @@ namespace IntegrationModule.Controllers
     public class NotificationController : ControllerBase
     {
 
-        private readonly ProjectDBContext _dbContext;
+        private readonly ProjectDBContext _context;
         private readonly SmtpClientSettings smtpClient;
 
         public NotificationController(ProjectDBContext dbContext, IOptions<SmtpClientSettings> smtpOptions)
         {
-            _dbContext = dbContext;
+            _context = dbContext;
             smtpClient = smtpOptions.Value;
         }
 
@@ -28,7 +28,7 @@ namespace IntegrationModule.Controllers
             try
             {
                 var allNotifications =
-                    _dbContext.Notification.Select(dbNotification =>
+                    _context.Notification.Select(dbNotification =>
                     new NotificationResponse
                     {
                         Id = dbNotification.Id,
@@ -50,7 +50,7 @@ namespace IntegrationModule.Controllers
         {
             try
             {
-                var dbNotification = _dbContext.Notification.FirstOrDefault(x => x.Id == id);
+                var dbNotification = _context.Notification.FirstOrDefault(x => x.Id == id);
                 if (dbNotification == null)
                     return NotFound();
 
@@ -84,9 +84,9 @@ namespace IntegrationModule.Controllers
                     Body = request.Body
                 };
 
-                _dbContext.Notification.Add(dbNotification);
+                _context.Notification.Add(dbNotification);
 
-                _dbContext.SaveChanges();
+                _context.SaveChanges();
 
                 return Ok(new NotificationResponse
                 {
@@ -112,7 +112,7 @@ namespace IntegrationModule.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                var dbNotification = _dbContext.Notification.FirstOrDefault(x => x.Id == id);
+                var dbNotification = _context.Notification.FirstOrDefault(x => x.Id == id);
                 if (dbNotification == null)
                     return NotFound();
 
@@ -121,7 +121,7 @@ namespace IntegrationModule.Controllers
                 dbNotification.Body = request.Body;
                 dbNotification.SentAt = DateTime.UtcNow;
 
-                _dbContext.SaveChanges();
+                _context.SaveChanges();
 
                 return Ok(new NotificationResponse
                 {
@@ -143,13 +143,13 @@ namespace IntegrationModule.Controllers
         {
             try
             {
-                var dbNotification = _dbContext.Notification.FirstOrDefault(x => x.Id == id);
+                var dbNotification = _context.Notification.FirstOrDefault(x => x.Id == id);
                 if (dbNotification == null)
                     return NotFound();
 
-                _dbContext.Notification.Remove(dbNotification);
+                _context.Notification.Remove(dbNotification);
 
-                _dbContext.SaveChanges();
+                _context.SaveChanges();
 
                 return Ok(new NotificationResponse
                 {
@@ -175,7 +175,7 @@ namespace IntegrationModule.Controllers
             try
             {
                 var unsentNotifications =
-                    _dbContext.Notification.Where(
+                    _context.Notification.Where(
                         x => !x.SentAt.HasValue);
 
                 foreach (var notification in unsentNotifications)
@@ -193,7 +193,7 @@ namespace IntegrationModule.Controllers
                         client.Send(mail);
 
                         notification.SentAt = DateTime.UtcNow;
-                        _dbContext.SaveChanges();
+                        _context.SaveChanges();
 
                     }
                     catch (Exception)
@@ -215,7 +215,7 @@ namespace IntegrationModule.Controllers
         {
             try
             {
-                var unsentCount = _dbContext.Notification.Count(x => x.SentAt == null);
+                var unsentCount = _context.Notification.Count(x => x.SentAt == null);
                 return Ok(unsentCount);
             }
             catch (Exception)
