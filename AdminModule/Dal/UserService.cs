@@ -54,11 +54,11 @@ namespace AdminModule.Dal
             return await _httpClient.PostAsync($"{_baseUrl}/Users/Register", content);
         }
 
-        //public async Task UpdateUserAsync(int id, UserRequest user)
-        //{
-        //    var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
-        //    await _httpClient.PutAsync($"{_baseUrl}/ManageUsers/Update/{id}", content);
-        //}
+        public async Task UpdateUserAsync(int id, UserReq user)
+        {
+            var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
+            await _httpClient.PutAsync($"{_baseUrl}/ManageUsers/Update/{id}", content);
+        }
 
         public async Task SoftDeleteUserAsync(int id)
         {

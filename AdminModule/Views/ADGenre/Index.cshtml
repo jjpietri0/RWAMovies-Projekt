@@ -73,7 +73,7 @@
             event.preventDefault();
             var name = $('#name').val();
             $.ajax({
-                url: '/GenreAdmin/CreateAjax',
+                url: '/ADGenre/CreateAjax',
                 type: 'POST',
                 data: { Name: name },
                 success: function(response) {
@@ -93,7 +93,7 @@
             var id = $('#edit-id').val();
             var name = $('#edit-name').val();
             $.ajax({
-                url: '/GenreAdmin/EditAjax',
+                url: '/ADGenre/EditAjax',
                 type: 'POST',
                 data: { id: id, Name: name },
                 success: function(response) {
@@ -110,7 +110,7 @@
 
     function fetchGenres() {
         $.ajax({
-            url: '/GenreAdmin/GetAllGenres',
+            url: '/ADGenre/GetAllGenres',
             type: 'GET',
             dataType: 'json',
             success: function (data) {
@@ -132,7 +132,7 @@
     function deleteGenre(id) {
         if(confirm('Are you sure you want to delete this genre?')) {
             $.ajax({
-                url: '/GenreAdmin/DeleteAjax',
+                url: '/ADGenre/DeleteAjax',
                 type: 'POST',
                 data: { id: id },
                 success: function(response) {

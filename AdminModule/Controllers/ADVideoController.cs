@@ -6,13 +6,13 @@ using Microsoft.Extensions.Options;
 
 namespace AdminModule.Controllers
 {
-    public class VideoAdminController : Controller
+    public class ADVideoController : Controller
     {
         private readonly VideoService _videoService;
         private readonly string _username;
         private readonly string _password;
 
-        public VideoAdminController(VideoService videoService, IOptions<Admin> adminConfig)
+        public ADVideoController(VideoService videoService, IOptions<Admin> adminConfig)
         {
             _videoService = videoService;
             _username = adminConfig.Value.Username;

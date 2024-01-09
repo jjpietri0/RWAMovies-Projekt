@@ -1,31 +1,26 @@
 ﻿using AdminModule.Dal;
-using IntegrationModule.Models;
 using IntegrationModule.REQModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdminModule.Controllers
 {
-    public class GenreAdminController : Controller
+    public class ADGenreController : Controller
     {
         private readonly GenreService _genreService;
 
-        public GenreAdminController(GenreService genreService)
+        public ADGenreController(GenreService genreService)
         {
             _genreService = genreService;
         }
 
         // GET: GenreAdmin 
-        public async Task<IActionResult> Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
         [HttpGet]
         public async Task<JsonResult> GetAllGenres()
         {
             try
             {
-                // Get all genres 
                 var genres = await _genreService.GetAllGenresAsync();
                 return Json(genres);
             }

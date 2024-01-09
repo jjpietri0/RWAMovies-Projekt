@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AdminModule.Controllers
 {
-    public class TagAdminController : Controller
+    public class ADTagController : Controller
     {
         private readonly TagService _tagService;
 
-        public TagAdminController(TagService tagService)
+        public ADTagController(TagService tagService)
         {
             _tagService = tagService;
         }

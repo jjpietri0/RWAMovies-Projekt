@@ -45,7 +45,7 @@ namespace IntegrationModule.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("[action]/{id}")]
         public ActionResult<NotificationResponse> GetById(int id)
         {
             try
@@ -69,7 +69,7 @@ namespace IntegrationModule.Controllers
             }
         }
 
-        [HttpPost()]
+        [HttpPost("[action]")]
         public ActionResult<NotificationResponse> Create(NotificationReq request)
         {
             try
@@ -81,7 +81,8 @@ namespace IntegrationModule.Controllers
                 {
                     ReceiverEmail = request.ReceiverEmail,
                     Subject = request.Subject,
-                    Body = request.Body
+                    Body = request.Body,
+                    CreatedAt = DateTime.UtcNow
                 };
 
                 _context.Notification.Add(dbNotification);
@@ -104,7 +105,7 @@ namespace IntegrationModule.Controllers
         }
 
 
-        [HttpPut("{id}")]
+        [HttpPut("[action]/{id}")]
         public ActionResult<NotificationResponse> Update(int id, [FromBody] NotificationReq request)
         {
             try
@@ -138,7 +139,7 @@ namespace IntegrationModule.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("[action]/{id}")]
         public ActionResult<NotificationResponse> Remove(int id)
         {
             try

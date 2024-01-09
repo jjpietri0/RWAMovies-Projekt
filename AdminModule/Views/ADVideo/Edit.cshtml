@@ -58,12 +58,12 @@
     </div>
 </form>
 
-@section Scripts {
+@section JS {
     <script>
         $(document).ready(function () {
             // Fetch genres for dropdown
             $.ajax({
-                url: "https://localhost:7035/api/Genres/GetAll",
+                url: "https://localhost:7035/api/Genres",
                 type: "GET",
                 success: function (data) {
                     var dropdown = $("#genresDropdown");
@@ -78,7 +78,7 @@
 
             // Fetch images for dropdown
             $.ajax({
-                url: "https://localhost:7035/api/Images",
+                url: "https://localhost:7035/api/Images/GetAll",
                 type: "GET",
                 success: function (data) {
                     var dropdown = $("#imagesDropdown");

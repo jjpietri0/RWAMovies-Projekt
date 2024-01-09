@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AdminModule.Controllers
 {
-    public class CountryAdminController : Controller
+    public class ADCountryController : Controller
     {
         private readonly CountryService _countryService;
 
-        public CountryAdminController(CountryService countryService)
+        public ADCountryController(CountryService countryService)
         {
             _countryService = countryService;
         }

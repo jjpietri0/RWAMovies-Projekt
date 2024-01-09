@@ -3,17 +3,13 @@ using AdminModule.Properties;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
-// Refresh razor pages on change
 builder.Services.AddRazorPages();
 
 
-// Add configuration for the API and Admin
 builder.Services.Configure<Api>(builder.Configuration.GetSection("Api"));
 builder.Services.Configure<Admin>(builder.Configuration.GetSection("AdminCreds"));
 
-// Add Services for the API
 builder.Services.AddHttpClient<VideoService>();
 builder.Services.AddHttpClient<CountryService>();
 builder.Services.AddHttpClient<TagService>();

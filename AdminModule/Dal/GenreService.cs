@@ -22,13 +22,12 @@ namespace AdminModule.Dal
         {
             try
             {
-                var response = await _httpClient.GetAsync($"{_baseUrl}/Genres/GetGenreAll");
+                var response = await _httpClient.GetAsync($"{_baseUrl}/Genres");
                 var content = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<IEnumerable<GenreResponse>>(content);
             }
             catch (Exception)
             {
-
                 throw;
             }
         }

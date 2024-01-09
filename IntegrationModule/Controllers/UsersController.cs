@@ -3,10 +3,7 @@ using IntegrationModule.Models;
 using IntegrationModule.REQModels;
 using IntegrationModule.ResponseModels;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace IntegrationModule.Controllers
 {

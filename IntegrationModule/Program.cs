@@ -20,11 +20,7 @@ var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri")!);
 //builder.Configuration["ConnectionStrings:AzureConnection"] = secretConnstring;
 
 
-builder.Services.AddDbContext<ProjectDBContext>(options =>
-{
-    //options.UseSqlServer(builder.Configuration.GetConnectionString("AzureConnection"));
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+
 
 
 //var tokenHandler = new JwtSecurityTokenHandler();
@@ -47,7 +43,6 @@ builder.Services.AddDbContext<ProjectDBContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSingleton<IUserGenRepository, UserGenRepository>();
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -75,16 +70,6 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowOrigin",
-               builder => builder.WithOrigins("https://localhost:7035", "http://localhost:5280")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials());
-});
-
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -101,13 +86,30 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddSingleton<IUserGenRepository, UserGenRepository>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowApi",
+               builder => builder.WithOrigins("http://localhost:5280")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials());
+});
+
+
+
+builder.Services.AddDbContext<ProjectDBContext>(options =>
+{
+    //options.UseSqlServer(builder.Configuration.GetConnectionString("AzureConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    //app.UseSwaggerUI();
 }
 
 app.UseSwaggerUI(c =>
@@ -117,14 +119,14 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint(swaggerSettings["Endpoint"], swaggerSettings["Title"]); 
     c.RoutePrefix = swaggerSettings["RoutePrefix"];
 });
-
-app.UseCors("AllowOrigin");
 app.UseHttpsRedirection();
+
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors("AllowApi");
+app.MapControllers();
 
 app.UseStaticFiles();
 
-app.MapControllers();
 
 app.Run();

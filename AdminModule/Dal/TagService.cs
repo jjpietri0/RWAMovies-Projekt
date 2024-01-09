@@ -20,7 +20,6 @@ namespace AdminModule.Dal
 
         public async Task<IEnumerable<TagResponse>> GetAllTagsAsync()
         {
-
             try
             {
                 var response = await _httpClient.GetAsync($"{_baseUrl}/Tags/GetAllTags");
