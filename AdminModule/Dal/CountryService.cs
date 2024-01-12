@@ -19,7 +19,7 @@ namespace AdminModule.Dal
         // GET: api/Countries
         public async Task<IEnumerable<CountryResponse>> GetAllCountriesAsync(int page)
         {
-            var response = await _httpClient.GetAsync($"{_baseUrl}/Countries?page={page}");
+            var response = await _httpClient.GetAsync($"{_baseUrl}/Country?page={page}");
             var content = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<IEnumerable<CountryResponse>>(content);
         }

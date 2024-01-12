@@ -177,7 +177,7 @@ namespace IntegrationModule.Controllers
             {
                 var unsentNotifications =
                     _context.Notification.Where(
-                        x => !x.SentAt.HasValue);
+                        x => !x.SentAt.HasValue).ToList();
 
                 foreach (var notification in unsentNotifications)
                 {
@@ -202,7 +202,6 @@ namespace IntegrationModule.Controllers
                         // Nothing to do here
                     }
                 }
-
                 return Ok();
             }
             catch (Exception)

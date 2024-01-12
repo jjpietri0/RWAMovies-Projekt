@@ -32,6 +32,14 @@ namespace AdminModule.Dal
             }
         }
 
+        public async Task<GenreResponse> GetGenreByIdAsync(int id)
+        {
+            var response = await _httpClient.GetAsync($"{_baseUrl}/Genres/GetGenreById/{id}");
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<GenreResponse>(content);
+        }
+
+
         public async Task CreateGenreAsync(GenreReq genre)
         {
             var content = new StringContent(JsonConvert.SerializeObject(genre), Encoding.UTF8, "application/json");

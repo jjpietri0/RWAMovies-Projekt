@@ -11,9 +11,9 @@
         public DateTime? DeletedAt { get; set; }
         public string PwdHash { get; set; } = null!;
         public string PwdSalt { get; set; } = null!;
+        public string? SecurityToken { get; set; }
         public string? Phone { get; set; }
         public bool IsConfirmed { get; set; }
-        public string? SecurityToken { get; set; }
         public virtual Country CountryOfResidence { get; set; } = null!;
         public int CountryOfResidenceId { get; set; }
     }

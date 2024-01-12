@@ -2,6 +2,7 @@ using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using IntegrationModule.JWTServices;
 using IntegrationModule.Models;
+using IntegrationModule.Properties;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -19,10 +20,6 @@ var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri")!);
 //var secretConnstring = (await client.GetSecretAsync("RWAConnectionString")).Value.Value;
 //builder.Configuration["ConnectionStrings:AzureConnection"] = secretConnstring;
 
-
-
-
-
 //var tokenHandler = new JwtSecurityTokenHandler();
 //var key = Encoding.ASCII.GetBytes("edbXe3uNTBm0zjxf/OvnVKbVq1KmKmnVvqxWK6JfeKU=");
 //var tokenDescriptor = new SecurityTokenDescriptor
@@ -39,6 +36,8 @@ var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri")!);
 //var token = tokenHandler.CreateToken(tokenDescriptor);
 //var tokenString = tokenHandler.WriteToken(token);
 
+//get smtp settings from confgiration "SmtpClientSettings" and 
+builder.Services.Configure<SmtpClientSettings>(builder.Configuration.GetSection("SmtpClientSettings"));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -109,7 +108,6 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    //app.UseSwaggerUI();
 }
 
 app.UseSwaggerUI(c =>

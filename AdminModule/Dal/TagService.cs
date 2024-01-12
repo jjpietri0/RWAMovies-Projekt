@@ -34,7 +34,7 @@ namespace AdminModule.Dal
 
         public async Task<TagResponse> GetTagByIdAsync(int id)
         {
-            var response = await _httpClient.GetAsync($"{_baseUrl}/Tags/GetById/{id}");
+            var response = await _httpClient.GetAsync($"{_baseUrl}/Tags/GetTagById/{id}");
             var content = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<TagResponse>(content);
         }
@@ -42,13 +42,13 @@ namespace AdminModule.Dal
         public async Task CreateTagAsync(TagReq tag)
         {
             var content = new StringContent(JsonConvert.SerializeObject(tag), Encoding.UTF8, "application/json");
-            await _httpClient.PostAsync($"{_baseUrl}/Tags/CreateTag", content);
+            await _httpClient.PostAsync($"{_baseUrl}/Tags/Create", content);
         }
 
         public async Task UpdateTagAsync(int id, TagReq tag)
         {
             var content = new StringContent(JsonConvert.SerializeObject(tag), Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync($"{_baseUrl}/Tags/UpdateTag/{id}", content);
+            await _httpClient.PutAsync($"{_baseUrl}/Tags/Update/{id}", content);
         }
 
         public async Task DeleteTagAsync(int id)

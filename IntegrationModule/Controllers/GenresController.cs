@@ -36,22 +36,21 @@ namespace IntegrationModule.Controllers
             }
         }
 
-        // GET: Genres/Details/5
         [HttpGet("[action]/{id}")]
         public ActionResult<GenreResponse> GetGenreByID(int? id)
         {
             try
             {
-                var dbGenre = _context.Genre.Find(id);
-                if (dbGenre == null)
+                var genreItem = _context.Genre.Find(id);
+                if (genreItem == null)
                 {
                     return NotFound();
                 }
                 var genre = new GenreResponse
                 {
-                    Id = dbGenre.Id,
-                    Name = dbGenre.Name,
-                    Description = dbGenre.Description
+                    Id = genreItem.Id,
+                    Name = genreItem.Name,
+                    Description = genreItem.Description
                 };
                 return Ok(genre);
             }
@@ -66,18 +65,18 @@ namespace IntegrationModule.Controllers
         {
             try
             {
-                var dbGenre = new Genre
+                var genreItem = new Genre
                 {
                     Name = genreResponse.Name,
                     Description = genreResponse.Description,
                 };
-                _context.Genre.Add(dbGenre);
+                _context.Genre.Add(genreItem);
                 _context.SaveChanges();
                 var genre = new GenreResponse
                 {
-                    Id = dbGenre.Id,
-                    Name = dbGenre.Name,
-                    Description = dbGenre.Description
+                    Id = genreItem.Id,
+                    Name = genreItem.Name,
+                    Description = genreItem.Description
                 };
                 return CreatedAtAction(nameof(GetGenreByID), new { id = genre.Id }, genre);
             }
@@ -93,19 +92,19 @@ namespace IntegrationModule.Controllers
         {
             try
             {
-                var dbGenre = _context.Genre.Find(id);
-                if (dbGenre == null)
+                var genreItem = _context.Genre.Find(id);
+                if (genreItem == null)
                 {
                     return NotFound();
                 }
-                dbGenre.Name = genreResponse.Name;
-                dbGenre.Description = genreResponse.Description;
+                genreItem.Name = genreResponse.Name;
+                genreItem.Description = genreResponse.Description;
                 _context.SaveChanges();
                 var genre = new GenreResponse
                 {
-                    Id = dbGenre.Id,
-                    Name = dbGenre.Name,
-                    Description = dbGenre.Description
+                    Id = genreItem.Id,
+                    Name = genreItem.Name,
+                    Description = genreItem.Description
                 };
                 return Ok(genre);
             }
@@ -121,24 +120,24 @@ namespace IntegrationModule.Controllers
         {
             try
             {
-                var dbGenre = _context.Genre.Find(id);
-                if (dbGenre == null)
+                var genreItem = _context.Genre.Find(id);
+                if (genreItem == null)
                 {
                     return NotFound();
                 }
 
-                var dbVideo = _context.Video.FirstOrDefault(v => v.GenreId == id);
-                if (dbVideo != null)
+                var videoItem = _context.Video.FirstOrDefault(v => v.GenreId == id);
+                if (videoItem != null)
                 {
                     return BadRequest("Cannot delete genre because it is referenced by a movie.");
                 }
 
-                _context.Genre.Remove(dbGenre);
+                _context.Genre.Remove(genreItem);
                 _context.SaveChanges();
                 var genre = new GenreResponse
                 {
-                    Id = dbGenre.Id,
-                    Name = dbGenre.Name
+                    Id = genreItem.Id,
+                    Name = genreItem.Name
                 };
                 return Ok(genre);
             }

@@ -1,25 +1,23 @@
 ﻿using AdminModule.Dal;
-using IntegrationModule.Models;
 using IntegrationModule.REQModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdminModule.Controllers
 {
-    public class UserAdminController : Controller
+    public class ADUserController : Controller
     {
-        private readonly UserService _userService;
+        private readonly UserService _adUserService;
 
-        public UserAdminController(UserService userService)
+        public ADUserController(UserService userService)
         {
-            _userService = userService;
+            _adUserService = userService;
         }
 
-        public async Task<IActionResult> Index(string usernameFilter = null, string firstNameFilter = null, string lastNameFilter = null, string countryFilter = null)
+        public async Task<IActionResult> Index(string usernameFilter = null, string firstnameFilter = null, string lastnameFilter = null, string countryFilter = null)
         {
             try
             {
-                var users = await _userService.GetAllUsersAsync(usernameFilter, firstNameFilter, lastNameFilter, countryFilter);
-
+                var users = await _adUserService.GetAllUsersAsync(usernameFilter, firstnameFilter, lastnameFilter, countryFilter);
                 return View(users);
             }
             catch (HttpRequestException)
@@ -40,22 +38,21 @@ namespace AdminModule.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var response = await _userService.CreateUserAsync(user);
+                    var response = await _adUserService.CreateUserAsync(user);
 
                     if (response.IsSuccessStatusCode)
                     {
-                        TempData["Message"] = "User created successfully!";
+                        TempData["Success"] = "Success!";
                         return RedirectToAction("Index");
                     }
                     else
                     {
-                        TempData["Error"] = "Failed to create user. Please try again.";
+                        TempData["Error"] = "Create failed. Try again.";
                         return RedirectToAction("Create");
                     }
                 }
                 else
                 {
-                    // Return with validation errors
                     return View(user);
                 }
             }
@@ -67,11 +64,25 @@ namespace AdminModule.Controllers
         }
 
 
+        //details
+        public async Task<IActionResult> Details(int id)
+        {
+            try
+            {
+                var user = await _adUserService.GetUserByIdAsync(id);
+                return View(user);
+            }
+            catch (HttpRequestException)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+        }
+
         public async Task<IActionResult> Edit(int id)
         {
             try
             {
-                var user = await _userService.GetUserByIdAsync(id);
+                var user = await _adUserService.GetUserByIdAsync(id);
                 return View(user);
             }
             catch (HttpRequestException)
@@ -85,7 +96,7 @@ namespace AdminModule.Controllers
         {
             try
             {
-                await _userService.UpdateUserAsync(id, user);
+                await _adUserService.UpdateUserAsync(id, user);
                 return RedirectToAction("Index");
             }
             catch (HttpRequestException)
@@ -98,7 +109,7 @@ namespace AdminModule.Controllers
         {
             try
             {
-                await _userService.SoftDeleteUserAsync(id);
+                await _adUserService.DeleteUserAsync(id);
                 return RedirectToAction("Index");
             }
             catch (HttpRequestException)

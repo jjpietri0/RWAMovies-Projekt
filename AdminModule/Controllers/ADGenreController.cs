@@ -6,70 +6,80 @@ namespace AdminModule.Controllers
 {
     public class ADGenreController : Controller
     {
-        private readonly GenreService _genreService;
+        private readonly GenreService _adGenreService;
 
         public ADGenreController(GenreService genreService)
         {
-            _genreService = genreService;
+            _adGenreService = genreService;
         }
 
-        // GET: GenreAdmin 
-        public IActionResult Index() => View();
 
-        [HttpGet]
-        public async Task<JsonResult> GetAllGenres()
+        public async Task<IActionResult> Index()
         {
             try
             {
-                var genres = await _genreService.GetAllGenresAsync();
-                return Json(genres);
+                return View(await _adGenreService.GetAllGenresAsync());
             }
             catch (HttpRequestException)
             {
-                return Json(new { error = "Error fetching genres" });
+                return RedirectToAction("Error", "Home");
+            }
+        }
 
+        public IActionResult Create() => View();
+
+
+        [HttpPost]
+        public async Task<IActionResult> Create(GenreReq genre)
+        {
+            try
+            {
+                await _adGenreService.CreateGenreAsync(genre);
+                return RedirectToAction("Index");
+            }
+            catch (HttpRequestException)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            try
+            {
+                var tag = await _adGenreService.GetGenreByIdAsync(id);
+                return View(tag);
+            }
+            catch (HttpRequestException)
+            {
+                return RedirectToAction("Error", "Home");
             }
         }
 
         [HttpPost]
-        public async Task<JsonResult> CreateAjax(GenreReq genre)
+        public async Task<IActionResult> Edit(int id, GenreReq genre)
         {
             try
             {
-                await _genreService.CreateGenreAsync(genre);
-                return Json(new { success = true });
+                await _adGenreService.UpdateGenreAsync(id, genre);
+                return RedirectToAction("Index");
             }
             catch (HttpRequestException)
             {
-                return Json(new { success = false });
+                return RedirectToAction("Error", "Home");
             }
         }
 
-        [HttpPost]
-        public async Task<JsonResult> EditAjax(int id, GenreReq genre)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                await _genreService.UpdateGenreAsync(id, genre);
-                return Json(new { success = true });
+                await _adGenreService.DeleteGenreAsync(id);
+                return RedirectToAction("Index");
             }
             catch (HttpRequestException)
             {
-                return Json(new { success = false });
-            }
-        }
-
-        [HttpPost]
-        public async Task<JsonResult> DeleteAjax(int id)
-        {
-            try
-            {
-                await _genreService.DeleteGenreAsync(id);
-                return Json(new { success = true });
-            }
-            catch (HttpRequestException)
-            {
-                return Json(new { success = false });
+                return RedirectToAction("Error", "Home");
             }
         }
     }

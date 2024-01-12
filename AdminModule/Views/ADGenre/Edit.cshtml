@@ -1,0 +1,23 @@
+﻿@model IntegrationModule.ResponseModels.GenreResponse
+
+@{
+    ViewData["Title"] = "Edit Genre";
+}
+
+<h1>Edit Genre</h1>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>
+<a asp-action="Index" class="mt-4">Back to List</a>
+

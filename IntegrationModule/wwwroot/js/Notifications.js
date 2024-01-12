@@ -2,7 +2,7 @@
     fetch("/api/Notification/GetUnsentNotificationsCount")
         .then(response => response.json())
         .then(count => {
-            document.querySelector("#unsentNotifNumber").textContent = count;
+            document.querySelector("#unsentNumber").textContent = count;
         });
 
     fetch("/api/Notification/GetAll")
@@ -31,7 +31,7 @@
                     fetch("/api/Notification/GetUnsentNotificationsCount")
                         .then(response => response.json())
                         .then(count => {
-                            document.querySelector("#unsentNotifNumber").textContent = count;
+                            document.querySelector("#unsentNumber").textContent = count;
                         });
                 } else {
                     alert("Error sending notifications");

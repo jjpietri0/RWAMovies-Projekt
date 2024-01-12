@@ -18,32 +18,24 @@ namespace AdminModule.Dal
             _baseUrl = apiConfig.Value.BaseUrl;
         }
 
-        public async Task<IEnumerable<UserResponse>> GetAllUsersAsync(string firstNameFilter = null, string lastNameFilter = null, string usernameFilter = null, string countryFilter = null)
+        public async Task<IEnumerable<UserResponse>> GetAllUsersAsync(string usernameFilter = null, string firstnameFilter = null, string lastnameFilter = null , string countryFilter = null)
         {
             var queryString = new List<string>();
 
-            if (!string.IsNullOrEmpty(firstNameFilter))
-                queryString.Add($"firstNameFilter={firstNameFilter}");
-
-            if (!string.IsNullOrEmpty(lastNameFilter))
-                queryString.Add($"lastNameFilter={lastNameFilter}");
-
-            if (!string.IsNullOrEmpty(usernameFilter))
-                queryString.Add($"usernameFilter={usernameFilter}");
-
-            if (!string.IsNullOrEmpty(countryFilter))
-                queryString.Add($"countryFilter={countryFilter}");
+            if (string.IsNullOrEmpty(usernameFilter)) queryString.Add($"usernameFilter={usernameFilter ?? "p"}");
+            if (string.IsNullOrEmpty(firstnameFilter)) queryString.Add($"firstnameFilter={firstnameFilter ?? "p"}");
+            if (string.IsNullOrEmpty(lastnameFilter)) queryString.Add($"lastnameFilter={lastnameFilter ?? "p"}");
+            if (string.IsNullOrEmpty(countryFilter)) queryString.Add($"countryFilter={countryFilter ?? "AF"}");
 
             var query = string.Join("&", queryString);
 
-            var response = await _httpClient.GetAsync($"{_baseUrl}/ManageUsers/GetAll?{query}");
+            var response = await _httpClient.GetAsync($"{_baseUrl}/UsersList/GetAllUsers?{query}");
             var content = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<IEnumerable<UserResponse>>(content);
         }
-
         public async Task<UserResponse> GetUserByIdAsync(int id)
         {
-            var response = await _httpClient.GetAsync($"{_baseUrl}/ManageUsers/GetById/{id}");
+            var response = await _httpClient.GetAsync($"{_baseUrl}/UsersList/GetId/{id}");
             var content = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<UserResponse>(content);
         }
@@ -57,12 +49,12 @@ namespace AdminModule.Dal
         public async Task UpdateUserAsync(int id, UserReq user)
         {
             var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync($"{_baseUrl}/ManageUsers/Update/{id}", content);
+            await _httpClient.PutAsync($"{_baseUrl}/UsersList/Update/{id}", content);
         }
 
-        public async Task SoftDeleteUserAsync(int id)
+        public async Task DeleteUserAsync(int id)
         {
-            await _httpClient.DeleteAsync($"{_baseUrl}/ManageUsers/SoftDelete/{id}");
+            await _httpClient.DeleteAsync($"{_baseUrl}/UsersList/Delete/{id}");
         }
     }
 }

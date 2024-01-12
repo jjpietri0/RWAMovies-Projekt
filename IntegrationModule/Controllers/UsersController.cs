@@ -11,54 +11,15 @@ namespace IntegrationModule.Controllers
     [ApiController]
     public class UsersController : Controller
     {
-        private readonly ProjectDBContext _context;
         private readonly IUserGenRepository _userGenRepository;
+        private readonly ProjectDBContext _context;
         private readonly string _baseURL;
 
         public UsersController(ProjectDBContext context, IUserGenRepository userGenRepository, IConfiguration configuration)
         {
-            _context = context;
             _userGenRepository = userGenRepository;
+            _context = context;
             _baseURL = configuration["BaseApiUrl"];
-        }
-
-        //Register new user action
-        [HttpPost("[action]")]
-        public ActionResult<User> Register([FromBody] UserRegisterReq userReq)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            try
-            {
-                if (_context.Users.Any(x => x.Username == userReq.Username))
-                {
-                    return BadRequest(new { message = "Username already exists" });
-                }
-
-                var registeredUser = _userGenRepository.Add(userReq);
-                _context.Users.Add(registeredUser);
-                _context.SaveChanges();
-
-                var notification = new Notification
-                {
-                    CreatedAt = DateTime.UtcNow,
-                    ReceiverEmail = registeredUser.Email,
-                    Subject = "Confirm register",
-                    Body = $"<h1>{userReq.FirstName} {userReq.LastName}</h1><p>Please confirm mail:{_baseURL}/validate-email.html?username={registeredUser.Username}&b64SecToken={registeredUser.SecurityToken} </p>"
-                };
-
-                _context.Notification.Add(notification);
-                _context.SaveChanges();
-
-                return Ok(new RegisteredUserResponse
-                {
-                    Id = registeredUser.Id,
-                    Token = registeredUser.SecurityToken,
-                });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
 
         [HttpPost("[action]")]
@@ -104,6 +65,61 @@ namespace IntegrationModule.Controllers
             }
         }
 
+        [HttpPost("[action]")]
+        public ActionResult<User> Register([FromBody] UserRegisterReq userReq)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            try
+            {
+                if (_context.Users.Any(x => x.Username == userReq.Username))
+                {
+                    return BadRequest(new { message = "Username already exists" });
+                }
+
+                var registeredUser = _userGenRepository.Add(userReq);
+                _context.Users.Add(registeredUser);
+                _context.SaveChanges();
+
+                var notification = new Notification
+                {
+                    CreatedAt = DateTime.UtcNow,
+                    ReceiverEmail = registeredUser.Email,
+                    Subject = "Confirm register",
+                    Body = $"<h1>{userReq.FirstName} {userReq.LastName}</h1><p>Please confirm mail:{_baseURL}/validate-email.html?username={registeredUser.Username}&b64SecToken={registeredUser.SecurityToken} </p>"
+                };
+
+                _context.Notification.Add(notification);
+                _context.SaveChanges();
+
+                return Ok(new RegisteredUserResponse
+                {
+                    Id = registeredUser.Id,
+                    Token = registeredUser.SecurityToken,
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        [HttpPost("[action]")]
+        public ActionResult<Tokens> JwtTokens([FromBody] JwtTokensReq request)
+        {
+            try
+            {
+                var authenticated = Authenticate(request.Username, request.Password);
+
+                if (!authenticated)
+                    throw new InvalidOperationException("Wrong authentication");
+
+                return Ok(_userGenRepository.JwtTokens(request));
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpPost("[action]")]
         public ActionResult ValidateEmail([FromBody] EmailValidReq request)
         {
