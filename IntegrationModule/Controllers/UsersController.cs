@@ -43,7 +43,7 @@ namespace IntegrationModule.Controllers
                 if (!isAuthenticated)
                     return Unauthorized("Wrong password.");
 
-                var tokens = _userGenRepository.JwtTokens(new JwtTokensReq
+                var tokens = _userGenRepository.GenerateJwtTokens(new JwtTokensReq
                 {
                     Username = loginReq.Username,
                     Password = loginReq.Password
@@ -104,7 +104,7 @@ namespace IntegrationModule.Controllers
         }
         
         [HttpPost("[action]")]
-        public ActionResult<Tokens> JwtTokens([FromBody] JwtTokensReq request)
+        public ActionResult<Tokens> GetJwtTokens([FromBody] JwtTokensReq request)
         {
             try
             {
@@ -113,7 +113,7 @@ namespace IntegrationModule.Controllers
                 if (!authenticated)
                     throw new InvalidOperationException("Wrong authentication");
 
-                return Ok(_userGenRepository.JwtTokens(request));
+                return Ok(_userGenRepository.GenerateJwtTokens(request));
             }
             catch (InvalidOperationException ex)
             {

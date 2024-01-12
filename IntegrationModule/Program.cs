@@ -90,7 +90,7 @@ builder.Services.AddSingleton<IUserGenRepository, UserGenRepository>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowApi",
-               builder => builder.WithOrigins("http://localhost:5280")
+               builder => builder.WithOrigins("http://localhost:5280","http://localhost:5182")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials());

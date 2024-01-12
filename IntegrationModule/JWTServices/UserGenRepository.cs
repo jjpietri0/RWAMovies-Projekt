@@ -52,7 +52,7 @@ namespace IntegrationModule.JWTServices
             return newRegUser;
         }
 
-        public Tokens JwtTokens(JwtTokensReq request)
+        public Tokens GenerateJwtTokens(JwtTokensReq request)
         {
             var jwtKey = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!);
 
@@ -65,7 +65,7 @@ namespace IntegrationModule.JWTServices
                 }),
                 Issuer = _configuration["Jwt:Issuer"],
                 Audience = _configuration["Jwt:Audience"],
-                Expires = DateTime.UtcNow.AddDays(120),
+                Expires = DateTime.UtcNow.AddDays(365),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(jwtKey),
                     SecurityAlgorithms.HmacSha256Signature)

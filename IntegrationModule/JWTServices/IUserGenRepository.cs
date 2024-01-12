@@ -6,6 +6,6 @@ namespace IntegrationModule.JWTServices
     public interface IUserGenRepository
     {
         User Add(UserRegisterReq request);
-        Tokens JwtTokens(JwtTokensReq request);
+        Tokens GenerateJwtTokens(JwtTokensReq request);
     }
 }
