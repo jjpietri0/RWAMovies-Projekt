@@ -23,17 +23,14 @@ namespace AdminModule.Controllers
         {
             try
             {
-                await _videoService.ObtainJwtTokenForAdmin(_username, _password);
+                await _videoService.GetJwtTokenForAdmin(_username, _password);
                 var videos = await _videoService.GetAllVideosAsync(page, filter);
-
-                // Pass the current filter to the view
                 ViewData["CurrentFilter"] = filter;
 
                 return View(videos);
             }
             catch (HttpRequestException)
             {
-                // Redirect to a custom error page or return an error view.
                 return RedirectToAction("Error", "Home");
             }
         }
@@ -48,7 +45,7 @@ namespace AdminModule.Controllers
         {
             try
             {
-                await _videoService.ObtainJwtTokenForAdmin(_username, _password);
+                await _videoService.GetJwtTokenForAdmin(_username, _password);
                 await _videoService.CreateVideoAsync(video);
                 return RedirectToAction("Index");
             }
@@ -62,7 +59,7 @@ namespace AdminModule.Controllers
         {
             try
             {
-                await _videoService.ObtainJwtTokenForAdmin(_username, _password);
+                await _videoService.GetJwtTokenForAdmin(_username, _password);
                 var video = await _videoService.GetVideoByIdAsync(id);
                 return View(video);
             }
@@ -77,7 +74,7 @@ namespace AdminModule.Controllers
         {
             try
             {
-                await _videoService.ObtainJwtTokenForAdmin(_username, _password);
+                await _videoService.GetJwtTokenForAdmin(_username, _password);
                 await _videoService.UpdateVideoAsync(id, video);
                 return RedirectToAction("Index");
             }
@@ -91,7 +88,7 @@ namespace AdminModule.Controllers
         {
             try
             {
-                await _videoService.ObtainJwtTokenForAdmin(_username, _password);
+                await _videoService.GetJwtTokenForAdmin(_username, _password);
                 await _videoService.DeleteVideoAsync(id);
                 return RedirectToAction("Index");
             }
@@ -102,12 +99,12 @@ namespace AdminModule.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> LoadData(int page, int pageSize, string nameFilter, string genreFilter)
+        public async Task<IActionResult> LoadVideos(int page, int pageSize, string nameFilter, string genreFilter)
         {
             try
             {
-                await _videoService.ObtainJwtTokenForAdmin(_username, _password);
-                var videos = await _videoService.GetAllVideosWithGenreFilterAsync(page, pageSize, nameFilter, genreFilter);
+                await _videoService.GetJwtTokenForAdmin(_username, _password);
+                var videos = await _videoService.GetAllVideosAsync(page,"");
                 return Ok(videos);
             }
             catch (HttpRequestException)

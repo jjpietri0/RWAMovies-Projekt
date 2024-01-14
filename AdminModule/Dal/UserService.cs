@@ -22,10 +22,10 @@ namespace AdminModule.Dal
         {
             var queryString = new List<string>();
 
-            if (string.IsNullOrEmpty(usernameFilter)) queryString.Add($"usernameFilter={usernameFilter ?? "p"}");
-            if (string.IsNullOrEmpty(firstnameFilter)) queryString.Add($"firstnameFilter={firstnameFilter ?? "p"}");
-            if (string.IsNullOrEmpty(lastnameFilter)) queryString.Add($"lastnameFilter={lastnameFilter ?? "p"}");
-            if (string.IsNullOrEmpty(countryFilter)) queryString.Add($"countryFilter={countryFilter ?? "AF"}");
+            if (!string.IsNullOrEmpty(usernameFilter)) queryString.Add($"usernameFilter={usernameFilter}");
+            if (!string.IsNullOrEmpty(firstnameFilter)) queryString.Add($"firstnameFilter={firstnameFilter}");
+            if (!string.IsNullOrEmpty(lastnameFilter)) queryString.Add($"lastnameFilter={lastnameFilter}");
+            if (!string.IsNullOrEmpty(countryFilter)) queryString.Add($"countryFilter={countryFilter}");
 
             var query = string.Join("&", queryString);
 

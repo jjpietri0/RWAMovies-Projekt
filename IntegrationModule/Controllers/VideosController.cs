@@ -16,10 +16,9 @@ namespace IntegrationModule.Controllers
             _context = dbContext;
         }
 
-        //GET(all)
         [Authorize]
         [HttpGet("[action]")]
-        public ActionResult<IEnumerable<VideoResponse>> GetAll([FromQuery] string name, [FromQuery] string genre, [FromQuery] string orderBy, [FromQuery] int? page, [FromQuery] int? pageSize)
+        public ActionResult<IEnumerable<VideoResponse>> GetAll([FromQuery] string? name, [FromQuery] string? genre, [FromQuery] string? orderBy, [FromQuery] int? page, [FromQuery] int? pageSize)
         {
             try
             {
@@ -35,21 +34,13 @@ namespace IntegrationModule.Controllers
 
                 if (!string.IsNullOrWhiteSpace(orderBy))
                 {
-                    switch (orderBy.ToLower())
+                    videos = orderBy.ToLower() switch
                     {
-                        case "id":
-                            videos = videos.OrderBy(v => v.Id);
-                            break;
-                        case "name":
-                            videos = videos.OrderBy(v => v.Name);
-                            break;
-                        case "totaltime":
-                            videos = videos.OrderBy(v => v.TotalSeconds);
-                            break;
-                        default:
-                            videos = videos.OrderBy(v => v.Id);
-                            break;
-                    }
+                        "id" => videos.OrderBy(v => v.Id),
+                        "name" => videos.OrderBy(v => v.Name),
+                        "totaltime" => videos.OrderBy(v => v.TotalSeconds),
+                        _ => videos.OrderBy(v => v.Id),
+                    };
                 }
                 else
                 {
@@ -83,7 +74,6 @@ namespace IntegrationModule.Controllers
             }
         }
 
-        //GET(id)
         [Authorize]
         [HttpGet("[action]/{id}")]
         public ActionResult<VideoResponse> GetId(int id)
@@ -253,32 +243,5 @@ namespace IntegrationModule.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-
-
-        //private void CreateOrUpdateGenreAndImage(VideoReq videoReq, out Genre? genre, out Image? image)
-        //{
-        //    var genreName = videoReq.GenreName.ToLower();
-        //    genre = _context.Genre.FirstOrDefault(g => g.Name == videoReq.GenreName);
-        //    if (genre == null)
-        //    {
-        //        genre = new Genre
-        //        {
-        //            Name = videoReq.GenreName
-        //        };
-        //        _context.Genre.Add(genre);
-        //    }
-
-        //    image = _context.Image.FirstOrDefault(i => i.Content == videoReq.ImageUrl);
-        //    if (image == null)
-        //    {
-        //        image = new Image
-        //        {
-        //            Content = videoReq.ImageUrl
-        //        };
-        //        _context.Image.Add(image);
-        //    }
-        //    _context.SaveChanges();
-        //}
-
     }
 }

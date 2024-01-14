@@ -26,9 +26,10 @@ var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri")!);
 //{
 //    Subject = new ClaimsIdentity(new Claim[]
 //    {
-//        new(ClaimTypes.Name, "Pero")
+//        new(ClaimTypes.Name, "admin"),
+//        new(ClaimTypes.Role, "admin")
 //    }),
-//    Expires = DateTime.UtcNow.AddDays(7),
+//    Expires = DateTime.UtcNow.AddDays(365),
 //    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
 //    Issuer = "localhost",
 //    Audience = "localhost"
@@ -36,7 +37,7 @@ var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri")!);
 //var token = tokenHandler.CreateToken(tokenDescriptor);
 //var tokenString = tokenHandler.WriteToken(token);
 
-//get smtp settings from confgiration "SmtpClientSettings" and 
+//get smtp settings from confgiration "SmtpClientSettings" 
 builder.Services.Configure<SmtpClientSettings>(builder.Configuration.GetSection("SmtpClientSettings"));
 
 builder.Services.AddControllers();
@@ -95,8 +96,6 @@ builder.Services.AddCors(options =>
                         .AllowAnyMethod()
                         .AllowCredentials());
 });
-
-
 
 builder.Services.AddDbContext<ProjectDBContext>(options =>
 {

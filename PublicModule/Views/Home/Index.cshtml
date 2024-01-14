@@ -4,10 +4,20 @@
 
 <div class="container-fluid text-center">
     <h1 class="display-4">Welcome to PublicModule!</h1>
-    <p class="lead">This is a public module for the public to use.</p>
     <p class="lead">Please login or register to use this module.</p>
     <p>
-        <a class="btn btn-primary btn-lg" asp-area="" asp-controller="PBLogin" asp-action="Index">Login</a>
+        <a class="btn btn-primary btn-lg" asp-area="" asp-controller="PBLogin" asp-action="Login">Login</a>
         <a class="btn btn-primary btn-lg" asp-area="" asp-controller="PBRegister" asp-action="Register">Register</a>
     </p>
 </div>
+
+@section JS {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        var accessToken = sessionStorage.getItem("AccessToken");
+        if (accessToken != null) {
+            window.location.href = "/PBVideos/Index";
+        }
+        });
+    </script>
+}

@@ -18,7 +18,7 @@ namespace IntegrationModule.Controllers
 
         //GET(all)
         [HttpGet("[action]")]
-        public ActionResult<IEnumerable<UserResponse>> GetAllUsers(string usernameFilter = null, string firstnameFilter = null, string lastnameFilter = null, string countryFilter = null)
+        public ActionResult<IEnumerable<UserResponse>> GetAllUsers(string? usernameFilter = null, string? firstnameFilter = null, string? lastnameFilter = null, string? countryFilter = null)
         {
             try
             {

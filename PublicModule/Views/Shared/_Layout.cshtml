@@ -19,11 +19,17 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1 justify-content-end">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark btn btn-primary" asp-area="" asp-controller="PBRegister" asp-action="Register">Register</a>
+                        <li class="nav-item mx-2">
+                            <span class="nav-link text-dark" id="usernameText" style="display:none"></span>
                         </li>
                         <li class="nav-item mx-2">
-                            <a class="nav-link text-dark btn btn-primary" asp-area="" asp-controller="PBLogin" asp-action="Login">Login</a>
+                            <a class="nav-link text-dark btn btn-primary" style="display:none" id="loginBtn" asp-area="" asp-controller="PBLogin" asp-action="Login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark btn btn-primary" style="display:none" id="registerBtn" asp-area="" asp-controller="PBRegister" asp-action="Register">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark btn btn-primary" id="logoutBtn" style="display:none" onclick="logout()">Logout</a>
                         </li>
                     </ul>
                 </div>
@@ -46,6 +52,26 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
 
+
+        function refresh() {
+            const accessToken = sessionStorage.getItem("AccessToken");
+            const userName = sessionStorage.getItem("Username");
+            const responseid = sessionStorage.getItem("ResponseId");
+
+            if (accessToken != null) {
+                var username = document.getElementById("usernameText");
+                username.innerHTML = "Welcome: " + userName;
+                var logoutButton = document.getElementById("logoutBtn");
+                username.style.display = "block";
+                logoutButton.style.display = "block";
+            } else {
+                document.getElementById("loginBtn").style.display = "block";
+                document.getElementById("registerBtn").style.display = "block";
+                document.getElementById("logoutBtn").style.display = "none";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", refresh);
     </script>
 
     @await RenderSectionAsync("JS", required: false)

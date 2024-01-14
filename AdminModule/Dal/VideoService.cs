@@ -12,31 +12,14 @@ namespace AdminModule.Dal
     {
         private readonly HttpClient _httpClient;
         private readonly string _baseUrl;
-        private string _jwtToken;
 
-        // Inject the HttpClient and the API configuration.
         public VideoService(HttpClient httpClient, IOptions<Api> apiConfig)
         {
             _httpClient = httpClient;
             _baseUrl = apiConfig.Value.BaseUrl;
         }
 
-        // Get Genre by Id
-        public async Task<GenreResponse> GetGenreByIdAsync(int id)
-        {
-            var response = await _httpClient.GetAsync($"{_baseUrl}/Genres/GetById/{id}");
-            var content = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<GenreResponse>(content);
-        }
-
-        // Set the JWT token to be used in the Authorization header.
-        public void SetJwtToken(string token)
-        {
-            _jwtToken = token;
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _jwtToken);
-        }
-
-        public async Task<IEnumerable<VideoResponse>> GetAllVideosAsync(int page, string filter)
+        public async Task<IEnumerable<VideoResponse>> GetAllVideosAsync(int? page, string? filter)
         {
             var response = await _httpClient.GetAsync($"{_baseUrl}/Videos/GetAll?page={page}&filter={filter}");
             var content = await response.Content.ReadAsStringAsync();
@@ -71,8 +54,15 @@ namespace AdminModule.Dal
 
         public async Task CreateVideoAsync(VideoReq video)
         {
-            var content = new StringContent(JsonConvert.SerializeObject(video), Encoding.UTF8, "application/json");
-            await _httpClient.PostAsync($"{_baseUrl}/Videos/Create", content);
+            try
+            {
+                var content = new StringContent(JsonConvert.SerializeObject(video), Encoding.UTF8, "application/json");
+                await _httpClient.PostAsync($"{_baseUrl}/Videos/Create", content);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task UpdateVideoAsync(int id, VideoReq video)
@@ -86,13 +76,12 @@ namespace AdminModule.Dal
             await _httpClient.DeleteAsync($"{_baseUrl}/Videos/Delete/{id}");
         }
 
-        // Obtain a JWT token for the administrative user
-        public async Task<string> ObtainJwtTokenForAdmin(string username, string password)
+        public async Task<string> GetJwtTokenForAdmin(string username, string password)
         {
             var loginRequest = new { Username = username, Password = password };
             var content = new StringContent(JsonConvert.SerializeObject(loginRequest), Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync($"{_baseUrl}/Users/JwtTokens", content);
+            var response = await _httpClient.PostAsync($"{_baseUrl}/Users/GetJwtTokens", content);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -101,14 +90,10 @@ namespace AdminModule.Dal
 
             var responseContent = await response.Content.ReadAsStringAsync();
             var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseContent);
-
-            // Set the token in Authorization header
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResponse.Token);
 
             return tokenResponse.Token;
         }
-
-        // Add a class for deserializing token response
         private class TokenResponse
         {
             public string Token { get; set; }

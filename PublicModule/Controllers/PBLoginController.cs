@@ -52,7 +52,6 @@ namespace PublicModule.Controllers
                                     sessionStorage.setItem('AccessToken', '{jwtToken.AccessToken}');
                                     sessionStorage.setItem('Username', '{userLoginReq.Username}');
                                     sessionStorage.setItem('ResponseId', '{response.Id}');
-                                    // Redirect to the desired page after setting the items
                                     window.location.href = '/';
                                 </script>";
                             ViewBag.ScriptToRun = script;

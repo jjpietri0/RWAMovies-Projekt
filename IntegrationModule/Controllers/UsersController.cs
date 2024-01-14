@@ -51,7 +51,7 @@ namespace IntegrationModule.Controllers
 
                 return Ok(new UserSignInResponse
                 {
-                    Id = user.Id,
+                    Id = user.Id, 
                     Username = user.Username,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
@@ -84,7 +84,7 @@ namespace IntegrationModule.Controllers
                 {
                     CreatedAt = DateTime.UtcNow,
                     ReceiverEmail = registeredUser.Email,
-                    Subject = "Confirm register",
+                    Subject = "Registration confirmation!",
                     Body = $"<h1>{userReq.FirstName} {userReq.LastName}</h1><p>Please confirm mail:{_baseURL}/validate-email.html?username={registeredUser.Username}&b64SecToken={registeredUser.SecurityToken} </p>"
                 };
 
