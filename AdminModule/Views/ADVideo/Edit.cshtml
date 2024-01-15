@@ -4,56 +4,62 @@
     ViewData["Title"] = "Edit Video";
 }
 
-<h1>Edit Video</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="text-center mb-4">Edit Video</h1>
 
-<form asp-action="Edit" method="post">
-    <input type="hidden" asp-for="Id" />
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
 
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="Description"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Description"></label>
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="GenreId">Genre</label>
-        <select id="genresDropdown" asp-for="GenreId" class="form-control">
-        </select>
-        <span asp-validation-for="GenreId" class="text-danger"></span>
-    </div>
+                <div class="form-group mb-3">
+                    <label asp-for="GenreId">Genre</label>
+                    <select id="genresDropdown" asp-for="GenreId" class="form-control">
+                    </select>
+                    <span asp-validation-for="GenreId" class="text-danger"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="TotalSeconds"></label>
-        <input asp-for="TotalSeconds" class="form-control" />
-        <span asp-validation-for="TotalSeconds" class="text-danger"></span>
-    </div>
+                <div class="form-group mb-3">
+                    <label asp-for="TotalSeconds"></label>
+                    <input asp-for="TotalSeconds" class="form-control" />
+                    <span asp-validation-for="TotalSeconds" class="text-danger"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="StreamingUrl"></label>
-        <input asp-for="StreamingUrl" class="form-control" />
-        <span asp-validation-for="StreamingUrl" class="text-danger"></span>
-    </div>
+                <div class="form-group mb-3">
+                    <label asp-for="StreamingUrl"></label>
+                    <input asp-for="StreamingUrl" class="form-control" />
+                    <span asp-validation-for="StreamingUrl" class="text-danger"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="ImageId">Image</label>
-        <select id="imagesDropdown" asp-for="ImageId" class="form-control">
-        </select>
-        <div id="imageContainer">
+                <div class="form-group mb-3">
+                    <label asp-for="ImageId">Image</label>
+                    <select id="imagesDropdown" asp-for="ImageId" class="form-control">
+                    </select>
+                    <div id="imageContainer">
+                    </div>
+                    <span asp-validation-for="ImageId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group text-center mt-4">
+                    <input type="submit" value="Save" class="btn btn-primary me-2" />
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </form>
         </div>
-        <span asp-validation-for="ImageId" class="text-danger"></span>
     </div>
-
-    <div class="form-group">
-        <input type="submit" value="Save" class="btn btn-primary" />
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-    </div>
-</form>
+</div>
 
 @section JS {
     <script>

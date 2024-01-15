@@ -8,8 +8,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.Configure<Api>(builder.Configuration.GetSection("Api"));
 
-
-
 builder.Services.AddHttpClient<LoginService>();
 builder.Services.AddHttpClient<RegisterService>();
 builder.Services.AddHttpClient<VideosService>();

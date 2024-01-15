@@ -3,46 +3,68 @@
 @{
     ViewData["Title"] = "Create Video";
 }
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="text-center mb-4">Create Video</h1>
 
-<h1>Create Video</h1>
+            <form asp-action="Create" method="post" class="needs-validation" novalidate>
+                <div class="form-group mb-3">
+                    <label for="Name">Name:</label>
+                    <input type="text" class="form-control" id="Name" name="Name" required />
+                    <div class="invalid-feedback">
+                        Please provide a name.
+                    </div>
+                </div>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label for="Name">Name:</label>
-        <input type="text" class="form-control" id="Name" name="Name" required />
-    </div>
-    <div class="form-group">
-        <label for="Description">Description:</label>
-        <input type="text" class="form-control" id="Description" name="Description" />
-    </div>
-    <div class="form-group">
-        <label for="GenreId">Genre:</label>
-        <select id="GenreId" name="GenreId" class="form-control"></select>
-    </div>
-    <div class="form-group">
-        <label for="TotalSeconds">Total Time (seconds):</label>
-        <input type="number" class="form-control" id="TotalSeconds" name="TotalSeconds" required />
-    </div>
-    <div class="form-group">
-        <label for="StreamingUrl">Streaming URL:</label>
-        <input type="url" class="form-control" id="StreamingUrl" name="StreamingUrl" required />
-    </div>
-    <div class="form-group">
-        <label for="ImageUrl">New Image URL:</label>
-        <input type="url" class="form-control" id="ImageUrl" name="ImageUrl" />
-    </div>
-    <div class="form-group">
-        <label for="ImageId">Or Select an Existing Image:</label>
-        <select id="ImageId" name="ImageId" class="form-control">
-            <option value="">Select Image</option>
-        </select>
-    </div>
+                <div class="form-group mb-3">
+                    <label for="Description">Description:</label>
+                    <input type="text" class="form-control" id="Description" name="Description" />
+                </div>
 
-    <button type="submit" class="btn btn-primary">Create</button>
-</form>
+                <div class="form-group mb-3">
+                    <label for="GenreId">Genre:</label>
+                    <select id="GenreId" name="GenreId" class="form-control custom-select"></select>
+                </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+                <div class="form-group mb-3">
+                    <label for="TotalSeconds">Total Time (seconds):</label>
+                    <input type="number" class="form-control" id="TotalSeconds" name="TotalSeconds" required />
+                    <div class="invalid-feedback">
+                        Please provide the total time in seconds.
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="StreamingUrl">Streaming URL:</label>
+                    <input type="url" class="form-control" id="StreamingUrl" name="StreamingUrl" required />
+                    <div class="invalid-feedback">
+                        Please provide a valid streaming URL.
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="ImageUrl">New Image URL:</label>
+                    <input type="url" class="form-control" id="ImageUrl" name="ImageUrl" />
+                </div>
+
+                <div class="form-group mb-4">
+                    <label for="ImageId">Or Select an Existing Image:</label>
+                    <select id="ImageId" name="ImageId" class="form-control custom-select">
+                        <option value="">Select Image</option>
+                    </select>
+                </div>
+
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+
+            <div class="text-center mt-3">
+                <a asp-action="Index" class="btn btn-link">Back to List</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section JS {
