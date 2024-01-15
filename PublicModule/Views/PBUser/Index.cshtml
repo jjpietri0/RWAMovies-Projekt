@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "User profile";
+}
+
+<div class="container-fluid text-center">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>User profile</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="offset-md-3 col-md-5 mt-4">
+            <div class="card mb-3 shadow-sm text-center">
+                <div class="card-body">
+                    <p class="card-text fw-bold h3">Username: <span class="fw-normal h3" id="username"></span></p>
+                    <p class="card-text fw-bold">First name: <span class="fw-normal" id="firstName"></span></p>
+                    <p class="card-text fw-bold">Last name: <span class="fw-normal" id="lastName"></span></p>
+                    <p class="card-text fw-bold">Email: <span class="fw-normal" id="email"></span></p>
+                    <p class="card-text fw-bold">Phone number: <span class="fw-normal" id="phoneNumber"></span></p>
+                    <p class="card-text fw-bold">Country: <span class="fw-normal" id="countryName"></span></p>
+
+                    <div class="alert alert-success" style="display:none">
+                        <p class="card-text fw-bold">Email is confirmed</p>
+                    </div>
+
+                    <div class="alert alert-danger" style="display:none">
+                        <p class="card-text fw-bold">Email is not confirmed</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="offset-md-3 col-md-5 mt-4">
+            <div class="card mb-3 shadow-sm text-center">
+                <div class="card-body">
+                    <a class="btn btn-outline-warning" asp-area="" asp-controller="PBUser" asp-action="ResetPassword">Reset password</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section JS{
+    <script>
+        $(document).ready(function () {
+            var userId = sessionStorage.getItem("ResponseId");
+            var countryId = 1;
+            $.ajax({
+                url: '@Url.Action("GetCurrentUser", "PBUser")',
+                type: 'GET',
+                data: { id: userId },
+                success: function (user) {
+                    $('#username').text(user.username);
+                    $('#firstName').text(user.firstName);
+                    $('#lastName').text(user.lastName);
+                    $('#email').text(user.email);
+                    $('#phoneNumber').text(user.phone);
+                    countryId = user.countryOfResidenceId;
+
+                    if (user.isConfirmed == true) {
+                        $('.alert-success').show();
+                    }
+                    else {
+                        $('.alert-danger').show();
+                    }
+                }
+            });
+            $.ajax({
+                url: 'https://localhost:7035/api/Country/' + countryId,
+                type: 'GET',
+                success: function (countryName) {
+                    $('#countryName').text(countryName.name);
+                }
+            });
+        });
+    </script>
+}

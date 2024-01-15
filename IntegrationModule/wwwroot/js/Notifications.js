@@ -11,14 +11,15 @@
             const notificationsList = document.querySelector("#notificationList");
             notifications.forEach(notification => {
                 const div = document.createElement("div");
-                div.id = "notification";
+                div.classList.add("notification-item"); // Add a class for styling
                 div.innerHTML = `
-            <div>${notification.subject}</div>
-            <div>${notification.receiverEmail}</div>
-            <div>${notification.sentAt}</div>`;
+                <div class="notification-subject">${notification.subject}</div>
+                <div class="notification-email">${notification.receiverEmail}</div>
+                <div class="notification-date">${notification.sentAt}</div>`;
                 notificationsList.appendChild(div);
             });
         });
+
 
     const sendNotificationsBtn = document.querySelector("#sendBtn");
     sendNotificationsBtn.addEventListener("click", function () {

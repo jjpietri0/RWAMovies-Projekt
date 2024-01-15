@@ -1,0 +1,96 @@
+﻿@{
+    ViewData["Title"] = "Videos";
+}
+
+<div class="container-fluid w-75">
+    <div class="row">
+        <div class="col text-center">
+            <h1>Videos</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <input type="text" class="form-control" id="search" placeholder="Search" onkeyup="filterVideos()" />
+        </div>
+    </div>
+
+    <div class="row" id="videoList"> 
+    </div>
+
+    
+
+
+</div>
+@section JS {
+    <script>
+        if(sessionStorage.getItem('AccessToken') == null) {
+            window.location.href = '/PBLogin/Login';
+        }
+
+        $(document).ready(function () {
+            loadVideoList();
+        });
+
+        function loadVideoList(name, genre, page) {
+            var accessToken = sessionStorage.getItem('AccessToken');
+            var orderBy = 'id'; 
+            var pageSize = 4; 
+            $.ajax({
+                url: '@Url.Action("GetVideos", "PBVideo")',
+                type: 'GET',
+                //dataType: 'json',
+                data: {
+                    name: name || '',
+                    genre: genre,
+                    orderBy: orderBy,
+                    page: page || 1,
+                    pageSize: pageSize
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+                },
+                success: function (videos) {
+                    $('#videoList').empty();
+                    $.each(videos, function (i, video) {
+                        var imageSrc = 'https://as1.ftcdn.net/v2/jpg/04/34/72/82/1000_F_434728286_OWQQvAFoXZLdGHlObozsolNeuSxhpr84.jpg';
+                        var cardHtml = '<div class="col-md-3 mt-4">' +
+                            '<div class="card mb-3 shadow-sm text-center" style="height:550px">' +
+                            '<span id="videoId" style="display:none">' + video.id + '</span>' +
+                            '<img id="videoImage' + video.id + '" class="card-img-top" src="' + imageSrc + '" alt="Video image">' +
+                            '<div class="card-body">' +
+                            '<h5 class="card-title">' + video.name + '</h5>' +
+                            '<p class="card-text">' + video.description + '</p>' +
+                            '<button class="btn btn-primary details">Details/Watch</button>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+                        $('#videoList').append(cardHtml);
+
+                        if (video.imageId != null) {
+                            $.ajax({
+                                url: 'https://localhost:7035/api/Images/GetImageUrl/' + video.imageId,
+                                type: 'GET',
+                                success: function (imageUrl) {
+                                    $('#videoImage' + video.id).attr('src', imageUrl);
+                                }
+                            });
+                        }
+                    });
+                },
+                error: function () {
+                    alert('Error loading videos.');
+                }
+            });
+        $(document).on('click', '.details', function () {
+            var videoId = $(this).closest('.card').find('#videoId').text();
+            var videoUrl = '@Url.Action("VideoInfo", "PBVideo")'+ '?id='+videoId+'&accessToken=' +accessToken;
+            window.location.href = videoUrl;
+        });
+        }
+
+        function filterVideos() {
+            var searchName = $('#search').val();
+            loadVideoList(searchName);
+        }
+    </script>
+}

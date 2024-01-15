@@ -24,7 +24,6 @@
     <div class="form-group">
         <label asp-for="GenreId">Genre</label>
         <select id="genresDropdown" asp-for="GenreId" class="form-control">
-            <!-- Genres will be populated using AJAX -->
         </select>
         <span asp-validation-for="GenreId" class="text-danger"></span>
     </div>
@@ -44,10 +43,8 @@
     <div class="form-group">
         <label asp-for="ImageId">Image</label>
         <select id="imagesDropdown" asp-for="ImageId" class="form-control">
-            <!-- Images will be populated using AJAX -->
         </select>
         <div id="imageContainer">
-            <!-- Image URL will be displayed when an image is selected -->
         </div>
         <span asp-validation-for="ImageId" class="text-danger"></span>
     </div>
@@ -61,22 +58,6 @@
 @section JS {
     <script>
         $(document).ready(function () {
-            // Fetch genres for dropdown
-            $.ajax({
-                url: "https://localhost:7035/api/Genres",
-                type: "GET",
-                success: function (data) {
-                    var dropdown = $("#genresDropdown");
-                    dropdown.empty();
-                    dropdown.append($("<option />").val("").text("Select Genre"));
-                    $.each(data, function () {
-                        dropdown.append($("<option />").val(this.id).text(this.name));
-                    });
-                    dropdown.val("@Model.GenreId"); // Set the selected value
-                }
-            });
-
-            // Fetch images for dropdown
             $.ajax({
                 url: "https://localhost:7035/api/Images/GetAll",
                 type: "GET",
@@ -87,11 +68,24 @@
                     $.each(data, function () {
                         dropdown.append($("<option />").val(this.id).text(this.content));
                     });
-                    dropdown.val("@Model.ImageId"); // Set the selected value
+                    dropdown.val("@Model.ImageId");
                 }
             });
+            $.ajax({
+                url: "https://localhost:7035/api/Genres",
+                type: "GET",
+                success: function (data) {
+                    var dropdown = $("#genresDropdown");
+                    dropdown.empty();
+                    dropdown.append($("<option />").val("").text("Select Genre"));
+                    $.each(data, function () {
+                        dropdown.append($("<option />").val(this.id).text(this.name));
+                    });
+                    dropdown.val("@Model.GenreId"); 
+                }
+            });
+           
 
-            // Display image URL when an image is selected
             $("#imagesDropdown").change(function () {
                 var selectedImageUrl = $(this).find("option:selected").text();
                 if (selectedImageUrl) {

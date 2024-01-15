@@ -104,7 +104,7 @@ namespace AdminModule.Controllers
             try
             {
                 await _videoService.GetJwtTokenForAdmin(_username, _password);
-                var videos = await _videoService.GetAllVideosAsync(page,"");
+                var videos = await _videoService.GetAllVideosWithFilterAsync(page,pageSize,nameFilter,genreFilter);
                 return Ok(videos);
             }
             catch (HttpRequestException)

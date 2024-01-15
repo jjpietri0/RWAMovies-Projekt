@@ -8,11 +8,6 @@
     <h1>Login Form</h1>
     <div class="row">
         <div class="col-12">
-            <p>Don't have an account? <a href="/PBRegister/Register">Register here</a></p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
             <form asp-controller="PBLogin" asp-action="Login" method="post" class="w-50">
                 <div class="form-group">
                     <label asp-for="Username">Username:</label>
@@ -28,17 +23,36 @@
             </form>
         </div>
     </div>
-</div>
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success p-4">
-        @TempData["Success"]
+    <div class="row">
+        <div class="col-12">
+            <p>Don't have an account? <a href="/PBRegister/Register">Register here</a></p>
+        </div>
     </div>
-}
+    <div class="row mt-4">
+        <div class="col-7">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success p-4">
+                    @TempData["Success"]
+                </div>
+            }
 
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger p-4">
-        @TempData["Error"]
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger p-4">
+                    @TempData["Error"]
+                </div>
+            }
+        </div>
     </div>
-}
+</div>
+
+
+<script>
+    if (sessionStorage.getItem('AccessToken') != null) {
+        window.location.href = '/PBVideo/Index';
+    }
+
+</script>
+
+

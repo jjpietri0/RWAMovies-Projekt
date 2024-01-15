@@ -26,7 +26,25 @@ namespace AdminModule.Dal
             return JsonConvert.DeserializeObject<IEnumerable<VideoResponse>>(content);
         }
 
-        public async Task<IEnumerable<VideoResponse>> GetAllVideosWithGenreFilterAsync(int page, int pageSize, string nameFilter, string genreFilter)
+        public async Task<string> GetJwtTokenForAdmin(string username, string password)
+        {
+            var loginRequest = new { Username = username, Password = password };
+            var content = new StringContent(JsonConvert.SerializeObject(loginRequest), Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync($"{_baseUrl}/Users/GetJwtTokens", content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Unable to authenticate");
+            }
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseContent);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResponse.accessToken);
+
+            return tokenResponse.accessToken;
+        }
+        public async Task<IEnumerable<VideoResponse>> GetAllVideosWithFilterAsync(int page, int pageSize, string nameFilter, string genreFilter)
         {
             var url = $"{_baseUrl}/Videos/GetAll?page={page}&pageSize={pageSize}";
 
@@ -47,7 +65,7 @@ namespace AdminModule.Dal
 
         public async Task<VideoResponse> GetVideoByIdAsync(int id)
         {
-            var response = await _httpClient.GetAsync($"{_baseUrl}/Videos/GetById/{id}");
+            var response = await _httpClient.GetAsync($"{_baseUrl}/Videos/GetId/{id}");
             var content = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<VideoResponse>(content);
         }
@@ -76,27 +94,9 @@ namespace AdminModule.Dal
             await _httpClient.DeleteAsync($"{_baseUrl}/Videos/Delete/{id}");
         }
 
-        public async Task<string> GetJwtTokenForAdmin(string username, string password)
-        {
-            var loginRequest = new { Username = username, Password = password };
-            var content = new StringContent(JsonConvert.SerializeObject(loginRequest), Encoding.UTF8, "application/json");
-
-            var response = await _httpClient.PostAsync($"{_baseUrl}/Users/GetJwtTokens", content);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Unable to authenticate");
-            }
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseContent);
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResponse.Token);
-
-            return tokenResponse.Token;
-        }
         private class TokenResponse
         {
-            public string Token { get; set; }
+            public string accessToken { get; set; }
         }
     }
 }

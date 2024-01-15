@@ -1,0 +1,59 @@
+﻿@model IntegrationModule.ResponseModels.VideoResponse
+
+@{
+    ViewData["Title"] = "Video Details";
+}
+
+<div class="container-fluid text-center">
+    <div class="row">
+        <div class="offset-md-3 col-md-5 mt-4">
+            <h1>Video Info</h1>
+            <div class="card mb-3 shadow-sm text-center">
+                <img id="videoImage" style="max-height:600px"  class="card-img-top" alt="Video image">
+                <div class="card-body">
+                    <h5 class="card-title">@Model.Name</h5>
+                    <p class="card-text">Description:<br/> @Model.Description</p>
+                    <p class="card-text">Genre: <span id="genreSpan"></span></p>
+                    <p class="card-text">Total Time: @Model.TotalSeconds seconds</p>
+                    @if (Model.Tags != null && Model.Tags.Any())
+                    {
+                        <span>Tags:</span>
+                        @foreach (var tag in Model.Tags)
+                        {
+                            <span class="badge badge-pill badge-primary">@tag.Name</span>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="col">
+            <a class="btn btn-primary fw-bold" style="width:10rem;height:4rem" href="@Model.StreamingUrl">Watch Video</a>
+        </div>
+    </div>
+</div>
+
+@section JS{
+    <script>
+        $(document).ready(function () {
+            if (@Model.ImageId != null) {
+                $.ajax({
+                    url: 'https://localhost:7035/api/Images/GetImageUrl/' + @Model.ImageId,
+                    type: 'GET',
+                    success: function (imageUrl) {
+                        $('#videoImage').attr('src', imageUrl);
+                    }
+                });
+            }
+            if (@Model.GenreId != null) {
+                $.ajax({
+                    url: 'https://localhost:7035/api/Genres/GetGenreByID/' + @Model.GenreId,
+                    type: 'GET',
+                    success: function (genreName) {
+                        $('#genreSpan').text(genreName.name);
+                    }
+                });
+            }
+        });
+    </script>
+}

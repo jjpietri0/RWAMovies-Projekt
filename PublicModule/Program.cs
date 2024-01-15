@@ -13,7 +13,7 @@ builder.Services.Configure<Api>(builder.Configuration.GetSection("Api"));
 builder.Services.AddHttpClient<LoginService>();
 builder.Services.AddHttpClient<RegisterService>();
 builder.Services.AddHttpClient<VideosService>();
-
+builder.Services.AddHttpClient<UserService>();
 
 var app = builder.Build();
 

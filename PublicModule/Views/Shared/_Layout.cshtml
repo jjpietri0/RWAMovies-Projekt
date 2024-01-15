@@ -18,8 +18,13 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="PBVideo" asp-action="Index">Videos</a>
+                        </li>
+                    </ul>
                     <ul class="navbar-nav flex-grow-1 justify-content-end">
-                        <li class="nav-item mx-2">
+                        <li class="nav-item">
                             <span class="nav-link text-dark" id="usernameText" style="display:none"></span>
                         </li>
                         <li class="nav-item mx-2">
@@ -27,6 +32,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark btn btn-primary" style="display:none" id="registerBtn" asp-area="" asp-controller="PBRegister" asp-action="Register">Register</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link text-dark btn btn-primary" id="profileBtn" style="display:none" asp-area="" asp-controller="PBUser" asp-action="Index">Profile</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark btn btn-primary" id="logoutBtn" style="display:none" onclick="logout()">Logout</a>
@@ -60,10 +68,12 @@
 
             if (accessToken != null) {
                 var username = document.getElementById("usernameText");
-                username.innerHTML = "Welcome: " + userName;
                 var logoutButton = document.getElementById("logoutBtn");
+                var profileButton = document.getElementById("profileBtn");
+                username.innerHTML = "Welcome: " + userName;
                 username.style.display = "block";
                 logoutButton.style.display = "block";
+                profileButton.style.display = "block";
             } else {
                 document.getElementById("loginBtn").style.display = "block";
                 document.getElementById("registerBtn").style.display = "block";

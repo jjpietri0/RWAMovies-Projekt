@@ -33,13 +33,18 @@ namespace PublicModule.Controllers
                     var response = await _registerService.Register(userRegisterReq);
                     if (response.IsSuccessStatusCode)
                     {
+
+                        TempData["Username"] = userRegisterReq.Username;
+                        //TempData["Token"] = response.Content.ReadAsStringAsync().Result;
+
                         TempData["Success"] = "User is registered successfully!";
-                        return RedirectToAction("Login", "PBLogin");
+                        return RedirectToAction("Register", "PBRegister");
                     }
                     else
                     {
                         TempData["Error"] = "User failed to register!";
-                        return View(userRegisterReq);
+                        return RedirectToAction("Register", "PBRegister");
+                        
                     }
                 }
                 else
@@ -50,7 +55,7 @@ namespace PublicModule.Controllers
             catch (Exception)
             {
                 TempData["Error"] = "Something went wrong! Registration failed!";
-                return RedirectToAction("Error");
+                return RedirectToAction("Register", "PBRegister");
             }
         }
 

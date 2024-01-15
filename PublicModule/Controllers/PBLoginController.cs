@@ -76,8 +76,9 @@ namespace PublicModule.Controllers
             }
             catch (Exception)
             {
-                TempData["Error"] = "Something went wrong! Login failed!";
-                return RedirectToAction("Error");
+                TempData["Error"] = "Wrong username or password! Login failed!";
+                return RedirectToAction("Login", "PBLogin");
+
             }
         }
 

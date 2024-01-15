@@ -47,6 +47,29 @@
         </div>
     </div>
 </div>
+
+
+@if (TempData["Username"] != null && TempData["Token"] != null)
+{
+    @* <script>
+        var username = '@TempData["Username"]';
+        var rawTokenString = '@TempData["Token"]';
+        var parsedTokenObject = JSON.parse(rawTokenString.replace(/&quot;/g, '\"'));
+        var token = parsedTokenObject.token;
+
+        sessionStorage.setItem("username", username);
+        sessionStorage.setItem("b64token", token);
+
+        var validateEmail = confirm("Do you want to validate your email?");
+        if (validateEmail) {
+            window.location.href = "https://localhost:7035/html/email-validation.html?username=" + encodeURIComponent(username) + "&b64SecToken=" + encodeURIComponent(token);
+        }
+    </script> *@
+}
+
+
+
+
 @if (TempData["Success"] != null)
 {
     <div class="alert alert-success p-4">

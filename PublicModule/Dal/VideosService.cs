@@ -1,12 +1,8 @@
-﻿using IntegrationModule.Models;
-using IntegrationModule.REQModels;
-using IntegrationModule.ResponseModels;
-using Microsoft.AspNetCore.Mvc;
+﻿using IntegrationModule.ResponseModels;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using PublicModule.Properties;
 using System.Net.Http.Headers;
-using System.Text;
 
 namespace PublicModule.Dal
 {
@@ -21,7 +17,7 @@ namespace PublicModule.Dal
             _baseApiUrl = api.Value.BaseApiUrl;
         }
 
-        public async Task<IEnumerable<VideoResponse>> GetVideosAsync(string videoName, string genre, string orderBy, int page, int pageSize,string accessToken)
+        public async Task<IEnumerable<VideoResponse>> GetVideosAsync(string videoName, string genre, string orderBy, int page, int pageSize, string accessToken)
         {
             SetAuthorizationHeaders(accessToken);
             var response = await _httpClient.GetAsync($"{_baseApiUrl}/Videos/GetAll?name={videoName}&genre={genre}&orderBy={orderBy}&page={page}&pageSize={pageSize}");
@@ -38,7 +34,7 @@ namespace PublicModule.Dal
             _httpClient.DefaultRequestHeaders.Authorization = authHeader;
         }
 
-        public async Task<VideoResponse> GetVideoByIdAsync(int id, string accessToken)
+        public async Task<VideoResponse> GetVideoIdAsync(int id, string accessToken)
         {
             SetAuthorizationHeaders(accessToken);
             var response = await _httpClient.GetAsync($"{_baseApiUrl}/Videos/GetId/{id}");
@@ -47,6 +43,6 @@ namespace PublicModule.Dal
             var video = JsonConvert.DeserializeObject<VideoResponse>(content);
             return video;
         }
-        
+
     }
 }

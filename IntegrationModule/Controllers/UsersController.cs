@@ -4,6 +4,7 @@ using IntegrationModule.REQModels;
 using IntegrationModule.ResponseModels;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography;
 
 namespace IntegrationModule.Controllers
 {
@@ -85,7 +86,7 @@ namespace IntegrationModule.Controllers
                     CreatedAt = DateTime.UtcNow,
                     ReceiverEmail = registeredUser.Email,
                     Subject = "Registration confirmation!",
-                    Body = $"<h1>{userReq.FirstName} {userReq.LastName}</h1><p>Please confirm mail:{_baseURL}/validate-email.html?username={registeredUser.Username}&b64SecToken={registeredUser.SecurityToken} </p>"
+                    Body = $"<h1>{userReq.FirstName} {userReq.LastName}</h1><p>Please confirm mail:{_baseURL}html/email-validation.html?username={registeredUser.Username}&b64SecToken={registeredUser.SecurityToken} </p>"
                 };
 
                 _context.Notification.Add(notification);
@@ -125,17 +126,10 @@ namespace IntegrationModule.Controllers
         {
             try
             {
-                var target = _context.Users.FirstOrDefault(x =>
-                    x.Username == request.Username && x.SecurityToken == request.B64Token);
+                var user = _context.Users.FirstOrDefault(x => x.Username == request.Username && x.SecurityToken == request.B64Token) ?? throw new InvalidOperationException("Authentication failed");
+                user.IsConfirmed = true;
 
-                if (target == null)
-                {
-                    throw new InvalidOperationException("Authentication failed");
-                }
-
-                target.IsConfirmed = true;
-
-                _context.Users.Update(target);
+                _context.Users.Update(user);
                 _context.SaveChanges();
 
                 return Ok();
@@ -144,6 +138,43 @@ namespace IntegrationModule.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPost("[action]")]
+        public ActionResult ResetPassword([FromBody] ResetPasswordReq resetPasswordReq)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var user = _context.Users.Find(resetPasswordReq.Id);
+            if (user == null)
+            {
+                return NotFound("User not found!");
+            }
+            if (!Authenticate(user.Username.ToLower(), resetPasswordReq.CurrentPassword))
+            {
+                return BadRequest("Current password is not correct");
+            }
+            if(Authenticate(user.Username.ToLower(), resetPasswordReq.NewPassword))
+            {
+                return BadRequest("New password cannot be the same as the old one");
+            }
+            byte[] salt = new byte[128 / 8];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+            byte[] hash = KeyDerivation.Pbkdf2(
+                               password: resetPasswordReq.NewPassword,
+                                              salt: salt,
+                                                             prf: KeyDerivationPrf.HMACSHA256,
+                                                                            iterationCount: 100000,
+                                                                                           numBytesRequested: 256 / 8);
+            user.PwdSalt = Convert.ToBase64String(salt);
+            user.PwdHash = Convert.ToBase64String(hash);
+            _context.SaveChanges();
+            return Ok();
         }
         private bool Authenticate(string username, string password)
         {

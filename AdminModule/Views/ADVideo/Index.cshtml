@@ -11,7 +11,7 @@
 <div>
     <input type="text" id="filterByName" placeholder="Filter by name" />
     <input type="text" id="filterByGenre" placeholder="Filter by genre" />
-    <button id="applyFilters" class="btn btn-secondary">Apply</button>
+    <button id="applyFilters" class="btn btn-secondary">Apply</button> 
 </div>
 
 <table class="table">
@@ -91,10 +91,10 @@
 
                             tr.append($("<td>").text(item.totalSeconds));
 
-                            var streamingUrl = $("<a>").attr("href", item.streamingUrl).attr("target", "_blank").text("Click here to watch the video");
+                            var streamingUrl = $("<a>").attr("href", item.streamingUrl).attr("target", "_blank").text("Video url");
                             tr.append($("<td>").append(streamingUrl));
 
-                            var img = $("<img>").attr("style", "height:100px;");
+                            var img = $("<img>").attr("style", "height:150px;");
                             fetchImageUrl(img, item.imageId);
                             tr.append($("<td>").append(img));
 
@@ -115,7 +115,7 @@
 
             function fetchGenreName(element, genreId) {
                 $.ajax({
-                    url: "https://localhost:7035/api/Genres/GetById/" + genreId,
+                    url: "https://localhost:7035/api/Genres/GetGenreById/" + genreId,
                     type: "GET",
                     success: function (data) {
                         element.text(data.name);
