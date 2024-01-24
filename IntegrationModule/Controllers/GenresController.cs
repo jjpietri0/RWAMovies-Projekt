@@ -86,7 +86,7 @@ namespace IntegrationModule.Controllers
             }
         }
 
-        // PUT: Genres/Edit/5
+        // PUT: Genres/Update/5
         [HttpPut("[action]/{id}")]
         public ActionResult<GenreResponse> Update(int id, [FromBody] GenreResponse genreResponse)
         {

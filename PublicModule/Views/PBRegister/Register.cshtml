@@ -14,31 +14,32 @@
             <form asp-controller="PBRegister" asp-action="Register" method="post">
                 <div class="form-group">
                     <label asp-for="Username">Username:</label>
-                    <input asp-for="Username" class="form-control" />
+                    <input asp-for="Username" class="form-control" required/>
                 </div>
                 <div class="form-group">
                     <label asp-for="FirstName">First Name:</label>
-                    <input asp-for="FirstName" class="form-control" />
+                    <input asp-for="FirstName" class="form-control" required/>
                 </div>
                 <div class="form-group">
                     <label asp-for="LastName">Last Name:</label>
-                    <input asp-for="LastName" class="form-control" />
+                    <input asp-for="LastName" class="form-control" required/>
                 </div>
                 <div class="form-group">
+
                     <label asp-for="Email">Email:</label>
-                    <input asp-for="Email" class="form-control" />
+                    <input asp-for="Email" type="email" class="form-control" required/>
                 </div>
                 <div class="form-group">
                     <label asp-for="Password">Password:</label>
-                    <input asp-for="Password" class="form-control" type="password" />
+                    <input asp-for="Password" class="form-control" type="password" required/>
                 </div>
                 <div class="form-group">
                     <label asp-for="CountryOfResidenceId">Country Of Residence:</label>
-                    <input asp-for="CountryOfResidenceId" class="form-control" />
+                    <input asp-for="CountryOfResidenceId" class="form-control" required/>
                 </div>
                 <div class="form-group">
                     <label asp-for="Phone">Phone Number:</label>
-                    <input asp-for="Phone" class="form-control" />
+                    <input asp-for="Phone" class="form-control" required/>
                 </div>
                 <div class="form-group mt-4">
                     <input type="submit" value="Register" class="btn btn-primary" />
@@ -46,40 +47,42 @@
             </form>
         </div>
     </div>
-</div>
+    <div class="row mt-4">
+        <div class="col-7">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success p-4">
+                    @TempData["Success"]
+                </div>
+            }
 
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger p-4">
+                    @TempData["Error"]
+                </div>
+            }
+        </div>
+    </div>
+</div>
 
 @if (TempData["Username"] != null && TempData["Token"] != null)
 {
-    @* <script>
+    <script>
         var username = '@TempData["Username"]';
-        var rawTokenString = '@TempData["Token"]';
-        var parsedTokenObject = JSON.parse(rawTokenString.replace(/&quot;/g, '\"'));
-        var token = parsedTokenObject.token;
+        var token= '@TempData["Token"]';
 
         sessionStorage.setItem("username", username);
         sessionStorage.setItem("b64token", token);
 
-        var validateEmail = confirm("Do you want to validate your email?");
+        var validateEmail = confirm("Do you want to validate your email in a new window?");
         if (validateEmail) {
-            window.location.href = "https://localhost:7035/html/email-validation.html?username=" + encodeURIComponent(username) + "&b64SecToken=" + encodeURIComponent(token);
+            window.open("https://localhost:7035/html/email-validation.html?username=" + encodeURIComponent(username) + "&b64SecToken=" + encodeURIComponent(token), '_blank');
         }
-    </script> *@
+
+    </script>
 }
 
 
 
 
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success p-4">
-        @TempData["Success"]
-    </div>
-}
-
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger p-4">
-        @TempData["Error"]
-    </div>
-}

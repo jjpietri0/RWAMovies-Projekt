@@ -1,5 +1,7 @@
 ﻿using IntegrationModule.REQModels;
+using IntegrationModule.ResponseModels;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PublicModule.Dal;
 
 namespace PublicModule.Controllers
@@ -33,9 +35,12 @@ namespace PublicModule.Controllers
                     var response = await _registerService.Register(userRegisterReq);
                     if (response.IsSuccessStatusCode)
                     {
+                        var responseString = await response.Content.ReadAsStringAsync();
+                        var registeredUserResponse = JsonConvert.DeserializeObject<RegisteredUserResponse>(responseString);
+                        var token = registeredUserResponse.Token;
 
                         TempData["Username"] = userRegisterReq.Username;
-                        //TempData["Token"] = response.Content.ReadAsStringAsync().Result;
+                        TempData["Token"] = token.ToString();
 
                         TempData["Success"] = "User is registered successfully!";
                         return RedirectToAction("Register", "PBRegister");

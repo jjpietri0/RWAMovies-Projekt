@@ -23,5 +23,5 @@ namespace PublicModule.Dal
             var response = await _httpClient.PostAsync($"{_baseApiUrl}/Users/Register", content);
             return response;
         }
-    }
+    } 
 }

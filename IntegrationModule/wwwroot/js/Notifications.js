@@ -11,7 +11,7 @@
             const notificationsList = document.querySelector("#notificationList");
             notifications.forEach(notification => {
                 const div = document.createElement("div");
-                div.classList.add("notification-item"); // Add a class for styling
+                div.classList.add("notification-item");
                 div.innerHTML = `
                 <div class="notification-subject">${notification.subject}</div>
                 <div class="notification-email">${notification.receiverEmail}</div>

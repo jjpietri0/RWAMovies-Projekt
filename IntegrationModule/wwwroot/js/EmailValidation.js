@@ -1,8 +1,14 @@
 ﻿var url = window.location.href;
 var username = url.split('?')[1].split('&')[0].split('=')[1];
 var b64Token = url.split('?')[1].split('&')[1].split('=')[1];
+var decodedToken = decodeURIComponent(b64Token);
+if (!decodedToken.endsWith('=')) {
+    decodedToken += '=';
+}
+
+
 document.getElementById("username").value = username;
-document.getElementById("b64Token").value = b64Token;
+document.getElementById("b64Token").value = decodedToken;
 
 var submitButton = document.getElementById("submitBtn");
 
@@ -14,7 +20,7 @@ method: "POST",
         },
         body: JSON.stringify({
             "Username": username,
-            "B64Token": b64Token
+            "B64Token": decodedToken
         })
     }).then(function (response) {
         if (response.ok) {

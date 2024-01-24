@@ -32,6 +32,7 @@ public partial class ProjectDBContext :
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        //azure key
         optionsBuilder.UseSqlServer("Server=tcp:jjpietri-server.database.windows.net,1433;Initial Catalog=RWAMovies;Persist Security Info=False;User ID=sis;Password=futurajjP123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
     }
 
