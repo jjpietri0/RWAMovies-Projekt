@@ -2,17 +2,19 @@
 
 namespace IntegrationModule.Models;
 
-public partial class ProjectDBContext :
-    DbContext
+public partial class ProjectDBContext : DbContext
 {
 
-    public ProjectDBContext()
+    private readonly IConfiguration config;
+    public ProjectDBContext(IConfiguration configuration)
     {
+        config = configuration;
     }
 
-    public ProjectDBContext(DbContextOptions<ProjectDBContext> options)
+    public ProjectDBContext(DbContextOptions<ProjectDBContext> options, IConfiguration configuration)
         : base(options)
     {
+        config = configuration;
     }
     public virtual DbSet<Country> Country { get; set; }
 
@@ -32,8 +34,7 @@ public partial class ProjectDBContext :
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        //azure key
-        optionsBuilder.UseSqlServer("Server=tcp:jjpietri-server.database.windows.net,1433;Initial Catalog=RWAMoviesJJP;Persist Security Info=False;User ID=sis;Password=futurajjP123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+        optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
